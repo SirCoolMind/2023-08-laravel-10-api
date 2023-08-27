@@ -34,7 +34,16 @@ class TaskController extends Controller
     {
        $task =  Task::create($request->validated());
 
-       return TaskResource::make($task);
+       if($task){
+            return response()->json([
+                'message' => "Data stored succesfully",
+                'data' => TaskResource::make($task),
+            ], 200);
+       }else{
+        return response()->json([
+            'message' => 'Something went wrong',
+        ], 500);
+       }
     }
 
     /**
