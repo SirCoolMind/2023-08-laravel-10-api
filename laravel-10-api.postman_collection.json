@@ -15,14 +15,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost/laravel-10-api/public/api/v1/tasks",
-							"protocol": "http",
+							"raw": "{{domain}}/api/v1/tasks",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
 							"path": [
-								"laravel-10-api",
-								"public",
 								"api",
 								"v1",
 								"tasks"
@@ -37,14 +34,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost/laravel-10-api/public/api/v1/tasks/1",
-							"protocol": "http",
+							"raw": "{{domain}}/api/v1/tasks/1",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
 							"path": [
-								"laravel-10-api",
-								"public",
 								"api",
 								"v1",
 								"tasks",
@@ -75,14 +69,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost/laravel-10-api/public/api/v1/tasks",
-							"protocol": "http",
+							"raw": "{{domain}}/api/v1/tasks",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
 							"path": [
-								"laravel-10-api",
-								"public",
 								"api",
 								"v1",
 								"tasks"
@@ -112,14 +103,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost/laravel-10-api/public/api/v1/tasks/11",
-							"protocol": "http",
+							"raw": "{{domain}}/api/v1/tasks/11",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
 							"path": [
-								"laravel-10-api",
-								"public",
 								"api",
 								"v1",
 								"tasks",
@@ -180,14 +168,11 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost/laravel-10-api/public/api/v1/tasks/11",
-							"protocol": "http",
+							"raw": "{{domain}}/api/v1/tasks/11",
 							"host": [
-								"localhost"
+								"{{domain}}"
 							],
 							"path": [
-								"laravel-10-api",
-								"public",
 								"api",
 								"v1",
 								"tasks",
@@ -198,6 +183,33 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "domain",
+			"value": "http://laravel-10-api.test",
+			"type": "string"
 		}
 	]
 }
