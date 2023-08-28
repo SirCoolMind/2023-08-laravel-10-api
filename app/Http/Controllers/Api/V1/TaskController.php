@@ -24,7 +24,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -59,7 +59,16 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        // $this->validateScope();
+
+        // $task = Task::with($this->loadedWithRelations())
+        //         ->find($id);
+
+        if ($task) {
+            return TaskResource::make($task);
+        } else {
+            return response()->json(['message' => __('Record not found.')], 404);
+        }
     }
 
     /**
@@ -69,6 +78,15 @@ class TaskController extends Controller
     {
         $task->update($request->validated());
 
+        if($task){
+            return response()->json([
+                'message' => "Data stored succesfully",
+                'data' => TaskResource::make($task),
+            ], 200);
+        }else{
+            return response()->json(['message' => 'Error saving record',], 500);
+        }
+
         return TaskResource::make($task);
     }
 
@@ -77,8 +95,13 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        $task->delete();
-        
-        return response()->noContent();
+        try {
+            $task->delete();
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error deleting record',], 500);
+        }
+        return response()->json([
+            'message' => "Data deleted succesfully",
+        ], 200);
     }
 }
