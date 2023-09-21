@@ -185,4 +185,26 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Global
+    |--------------------------------------------------------------------------
+    |
+    | I don't know how to write this but yeah, this is global setup
+    |
+    */
+
+    'mysql_date_format' => 'Y-m-d',
+
+    'mysql_datetime_format' => 'Y-m-d H:i:s',
+
+    'date_format' => 'm/d/Y',
+
+    'date_format_javascript' => 'MM/DD/YYYY',
+
+    'datetime_format' => 'm/d/Y h:i A',
+
+    'datetime_format_javascript' => 'MM/DD/YYYY h:i A',
+
 ];

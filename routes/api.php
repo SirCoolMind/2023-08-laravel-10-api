@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Task\CompleteTaskController;
 use App\Http\Controllers\Api\V1\Task\TaskController;
+use App\Http\Controllers\Api\V1\Transaction\TransactionController;
 use App\Http\Controllers\Api\V1\Transaction\TransactionType\TransactionTypeController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
@@ -35,6 +36,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
         Route::apiResource('/tasks', TaskController::class);
         Route::patch('/tasks/{task}/complete', CompleteTaskController::class);
 
+        Route::apiResource('transaction', TransactionController::class);
         Route::prefix('transaction')->group(function(){
             Route::apiResource('/transaction-type', TransactionTypeController::class);
         });
