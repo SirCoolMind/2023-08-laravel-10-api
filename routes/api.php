@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\Task\TaskController;
 use App\Http\Controllers\Api\V1\Transaction\TransactionController;
 use App\Http\Controllers\Api\V1\Transaction\TransactionType\TransactionTypeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::group(['middleware' => ['auth:sanctum']], function(){
 
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/all-users', [UserController::class, 'allUsers']);
 
     Route::prefix('v1')->group(function(){
         Route::apiResource('/tasks', TaskController::class);
