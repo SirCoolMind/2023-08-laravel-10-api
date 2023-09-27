@@ -22,9 +22,8 @@ class UserController extends Controller
             return $this->success([
                 'users' => $allUsers
             ]);
-
         }
-        return $this->error('','No data found',401);
+        return $this->error('','No data found',404);
 
 
     }
