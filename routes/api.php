@@ -32,7 +32,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::group(['middleware' => ['auth:sanctum']], function(){
 
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/all-users', [UserController::class, 'allUsers']);
+    Route::get('/all-users', [UserController::class, 'index']);
 
     Route::prefix('v1')->group(function(){
         Route::apiResource('/tasks', TaskController::class);
