@@ -19,6 +19,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        //Password Validation
+        \Illuminate\Validation\Rules\Password::defaults(function () {
+            $rule = \Illuminate\Validation\Rules\Password::min(8);
+
+            return $this->app->isProduction()
+                        ? $rule->mixedCase()->symbols()->uncompromised()
+                        : $rule;
+        });
     }
 }
