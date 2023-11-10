@@ -29,7 +29,7 @@ class UserUpdateRequest extends FormRequest
             'email' => [
                 'required',
                 'email',
-                Rule::unique('users')->ignore($this->user()->email, 'email')
+                Rule::unique('users','email')->ignore($this->id, 'id')
             ],
         ];
     }

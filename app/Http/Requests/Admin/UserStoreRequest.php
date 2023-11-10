@@ -25,7 +25,7 @@ class UserStoreRequest extends FormRequest
 
         return [
             'name'  => 'required|string:max:255',
-            'email' => 'required|unique:App\Models\User,email',
+            'email' => 'required|email|unique:App\Models\User,email',
             'password' => [Password::defaults()],
         ];
     }
