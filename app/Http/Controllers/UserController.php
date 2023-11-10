@@ -111,15 +111,19 @@ class UserController extends Controller
     /**
      * Set values from request into model (user)
      *
-     * @param Request   $request    a Request instance
-     * @param User      $user       an User instance
+     * @param Request $request a Request instance
+     * @param User $user an User instance
      *
-     * @return User     $user   updated User instance
+     * @return User $user updated User instance
      */
     private function setUser($request, User $user){
 
         $user->name = $request->input('name');
         $user->email = $request->input('email');
+
+        // added this by default first
+        // TODO:: add password and password confirmation
+        $user->password = \Hash::make("@Skp3ntest");
 
         if ($password = $request->input('password')) {
             $user->password = \Hash::make($password);
