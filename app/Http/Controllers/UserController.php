@@ -65,7 +65,7 @@ class UserController extends Controller
         }
 
         \DB::commit();
-        return $this->success(['user' => UserResource::make($user)]);
+        return $this->success(['data' => UserResource::make($user)]);
     }
 
     /**
@@ -73,7 +73,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $this->success(['user' => UserResource::make($user)]);
+        return $this->success(['data' => UserResource::make($user)]);
     }
 
     /**
@@ -92,7 +92,7 @@ class UserController extends Controller
         }
 
         \DB::commit();
-        return $this->success(['user' => UserResource::make($user)]);
+        return $this->success(['data' => UserResource::make($user)]);
     }
 
     /**
