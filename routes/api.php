@@ -31,10 +31,15 @@ Route::post('/register', [AuthController::class, 'register']);
 //Protected route
 Route::group(['middleware' => ['auth:sanctum']], function(){
 
+    Route::get('/get-permissions', function () {
+        return auth()->check()?auth()->user()->jsPermissions():0;
+    });
+
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix('admin')->group(function(){
         Route::apiResource('users', UserController::class);
+        Route::apiResource('roles', RoleController::class);
     });
 
     Route::prefix('v1')->group(function(){
