@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\Task\TaskController;
 use App\Http\Controllers\Api\V1\Transaction\TransactionController;
 use App\Http\Controllers\Api\V1\Transaction\TransactionType\TransactionTypeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
