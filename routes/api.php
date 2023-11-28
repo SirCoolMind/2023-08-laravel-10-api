@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\Task\TaskController;
 use App\Http\Controllers\Api\V1\Transaction\TransactionController;
 use App\Http\Controllers\Api\V1\Transaction\TransactionType\TransactionTypeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -41,6 +42,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::prefix('admin')->group(function(){
         Route::apiResource('users', UserController::class);
         Route::apiResource('roles', RoleController::class);
+        Route::apiResource('permissions', PermissionController::class);
     });
 
     Route::prefix('v1')->group(function(){
