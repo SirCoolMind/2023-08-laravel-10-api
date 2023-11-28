@@ -9,6 +9,7 @@ use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -80,6 +81,7 @@ class RoleController extends Controller
         \DB::beginTransaction();
         try {
             $role = $this->setRole($request, $role);
+            $role = $this->setPermissions($request, $role);
 
         } catch (\Throwable $e) {
 
@@ -116,6 +118,21 @@ class RoleController extends Controller
 
         $role->name = $request->input('name');
         $role->save();
+        return $role;
+    }
+
+    /**
+     * Assigning permission into role
+     *
+     * @param Request $request a Request instance
+     * @param Role $role an Role instance
+     *
+     * @return Role $role updated Role instance
+     */
+    private function setPermissions($request, Role $role){
+        // dd($request->input('permissions'));
+        $permissions = Permission::whereIn('id',$request->input('permissions'))->get();
+        $role->syncPermissions($permissions);
         return $role;
     }
 }

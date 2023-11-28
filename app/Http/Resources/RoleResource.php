@@ -18,6 +18,7 @@ class RoleResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'created_at' => $this->created_at->format('d/m/Y') ,
+            'permissions' => $this->getAllPermissions()->pluck(['id'])->toArray()
         ];
     }
 }

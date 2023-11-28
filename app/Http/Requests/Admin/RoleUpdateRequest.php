@@ -22,11 +22,14 @@ class RoleUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
             'name' => [
                 'required',
-                Rule::unique('roles','name')->ignore($this->id, 'id')
+                Rule::unique('roles','name')->ignore($this->role->id, 'id')
+            ],
+            'permissions.*' => [
+                'nullable',
+                'exists:permissions,id',
             ],
         ];
     }
