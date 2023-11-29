@@ -10,6 +10,7 @@ use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -84,6 +85,7 @@ class UserController extends Controller
         \DB::beginTransaction();
         try {
             $user = $this->setUser($request, $user);
+            $user = $this->setRoles($request, $user);
 
         } catch (\Throwable $e) {
 
@@ -130,6 +132,21 @@ class UserController extends Controller
         }
 
         $user->save();
+        return $user;
+    }
+
+    /**
+     * Assigning roles into user
+     *
+     * @param Request $request a Request instance
+     * @param User $user an User instance
+     *
+     * @return User $user updated User instance
+     */
+    private function setRoles($request, User $user){
+
+        $roles = Role::whereIn('id',$request->input('roles'))->get();
+        $user->syncRoles($roles);
         return $user;
     }
 }
