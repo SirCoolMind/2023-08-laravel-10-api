@@ -16,6 +16,8 @@ class User extends Authenticatable implements Auditable
     use \LaravelAndVueJS\Traits\LaravelPermissionToVueJS;
     use \OwenIt\Auditing\Auditable;
 
+    protected function getDefaultGuardName(): string { return 'web'; }
+
     /**
      * The attributes that are mass assignable.
      *
