@@ -15,6 +15,7 @@ use Spatie\Permission\Models\Role;
 class RoleController extends Controller
 {
     use HttpResponses;
+    protected function getDefaultGuardName(): string { return 'web'; }
 
     public function index(Request $request){
 
@@ -117,6 +118,7 @@ class RoleController extends Controller
     private function setRole($request, Role $role){
 
         $role->name = $request->input('name');
+        $role->guard_name = $this->getDefaultGuardName();
         $role->save();
         return $role;
     }

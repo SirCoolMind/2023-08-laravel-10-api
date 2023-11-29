@@ -14,6 +14,7 @@ use Spatie\Permission\Models\Permission;
 class PermissionController extends Controller
 {
     use HttpResponses;
+    protected function getDefaultGuardName(): string { return 'web'; }
 
     public function index(Request $request){
 
@@ -115,6 +116,7 @@ class PermissionController extends Controller
     private function setPermission($request, Permission $permission){
 
         $permission->name = $request->input('name');
+        $permission->guard_name = $this->getDefaultGuardName();
         $permission->save();
         return $permission;
     }
