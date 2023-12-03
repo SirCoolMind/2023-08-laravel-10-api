@@ -17,8 +17,8 @@ class PermissionResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            // 'module' => $this->module,
-            // 'action' => $this->action,
+            'module' => $this->module,
+            'action' => $this->action,
             'created_at' => $this->created_at->format('d/m/Y') ,
         ];
     }

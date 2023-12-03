@@ -46,6 +46,37 @@ class PermissionController extends Controller
         return $this->error('','No data found',404);
     }
 
+    public function indexMultiple(Request $request){
+
+        // * sort
+        $sortBy = '';
+        switch ($request->input('sort_by')) {
+            case 'name':
+                $sortBy = 'name';
+                break;
+            default:
+                $sortBy = 'module';
+                break;
+        }
+        $sortOrder = $request->input('sort_order') == "desc" ? "desc" : "asc";
+        $search = $request->input('search');
+        // \Log::debug("sortby, sortOrder||". $sortBy." : ".$sortOrder);
+
+        $permissions = Permission::query()
+                    ->when($search, function($query) use($search){
+                        return $query
+                            ->where('name', 'LIKE', "%{$search}%")
+                            ->orWhere('module', 'LIKE', "%{$search}%")
+                            ->orWhere('action', 'LIKE', "%{$search}%");
+                    })
+                    ->orderBy($sortBy, $sortOrder)
+                    ->paginate($request->input('items_per_page'));
+        if($permissions){
+            return PermissionResource::collection($permissions);
+        }
+        return $this->error('','No data found',404);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -75,6 +106,19 @@ class PermissionController extends Controller
     }
 
     /**
+     * Display the specified resource by module.
+     */
+    public function showMultiple(Permission $permission)
+    {
+        $actions = Permission::where('module', $permission->module)->get()?->pluck('action')?->toArray() ?? [];
+        $data = [
+            'module' => $permission->module,
+            'actions' => $actions,
+        ];
+        return $this->success(['data' => $data]);
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(PermissionUpdateRequest $request, Permission $permission)
@@ -100,7 +144,7 @@ class PermissionController extends Controller
     {
         \DB::beginTransaction();
         try {
-            $permissions = $this->setMultiplePermissions($request);
+            $this->setMultiplePermissions($request);
 
         } catch (\Throwable $e) {
 
@@ -109,7 +153,12 @@ class PermissionController extends Controller
         }
 
         \DB::commit();
-        return $this->success(['data' => PermissionResource::collection($permissions)]);
+        $actions = Permission::where('module', $module)->get()?->pluck('action')?->toArray() ?? [];
+        $data = [
+            'module' => $module,
+            'actions' => $actions,
+        ];
+        return $this->success(['data' => $data]);
     }
 
     /**
@@ -176,6 +225,5 @@ class PermissionController extends Controller
             $keepThisId[] = $permission->id;
         }
         $permissionDelete = Permission::where('module', $module)->whereNotIn('id',$keepThisId)->delete();
-        return Permission::where('module', $module)->whereIn('id',$keepThisId)->get();
     }
 }
