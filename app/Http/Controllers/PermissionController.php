@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Admin\PermissionMultipleUpdateRequest;
 use App\Http\Requests\Admin\PermissionStoreRequest;
 use App\Http\Requests\Admin\PermissionUpdateRequest;
 use App\Http\Resources\PermissionResource;
@@ -93,6 +94,25 @@ class PermissionController extends Controller
     }
 
     /**
+     * Update multiple permission
+    */
+    public function updateMultiple(PermissionMultipleUpdateRequest $request)
+    {
+        \DB::beginTransaction();
+        try {
+            $permissions = $this->setMultiplePermissions($request);
+
+        } catch (\Throwable $e) {
+
+            \DB::rollback();
+            return $this->error(['detail' => $e->getMessage()],'', 422);
+        }
+
+        \DB::commit();
+        return $this->success(['data' => PermissionResource::collection($permissions)]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Permission $permission)
@@ -115,9 +135,47 @@ class PermissionController extends Controller
      */
     private function setPermission($request, Permission $permission){
 
-        $permission->name = $request->input('name');
+        $permission->name = $name = $request->input('name');
+        $pieces = explode(".", $name);
+        $permission->module = $pieces[0];
+        $permission->action = $pieces[1] ?? $pieces[0];
         $permission->guard_name = $this->getDefaultGuardName();
         $permission->save();
+
         return $permission;
+    }
+
+    /**
+     * Set multiple permission and delete unused (Permission Page)
+     *
+     * @param Request $request a Request instance
+     *
+     */
+    private function setMultiplePermissions($request){
+
+        $module = $request->input('module');
+        $actions = $request->input('actions');
+
+        $keepThisId = [];
+        $permissions = Permission::where('module', $module)->get();
+
+        foreach($actions as $action){
+
+            $permission = $permissions->firstWhere('action', $action);
+            if (!$permission) {
+
+                $permissionData = [
+                    'module' => $module,
+                    'action' => $action,
+                    'name' => $module.'.'.$action,
+                    'guard_name' => $this->getDefaultGuardName(),
+                ];
+
+                $permission = Permission::create($permissionData);
+            }
+            $keepThisId[] = $permission->id;
+        }
+        $permissionDelete = Permission::where('module', $module)->whereNotIn('id',$keepThisId)->delete();
+        return Permission::where('module', $module)->whereIn('id',$keepThisId)->get();
     }
 }

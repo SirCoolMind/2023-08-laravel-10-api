@@ -43,6 +43,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
         Route::apiResource('users', UserController::class);
         Route::apiResource('roles', RoleController::class);
         Route::apiResource('permissions', PermissionController::class);
+        Route::post('permissions/update-multiple', [PermissionController::class, 'updateMultiple']);
     });
 
     Route::prefix('v1')->group(function(){
