@@ -44,7 +44,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
         Route::apiResource('roles', RoleController::class);
         Route::get('permissions/index-multiple', [PermissionController::class, 'indexMultiple']);
         Route::post('permissions/update-multiple', [PermissionController::class, 'updateMultiple']);
-        Route::get('permissions/show-multiple/{permission}', [PermissionController::class, 'showMultiple']);
+        Route::get('permissions/show-multiple/{module}', [PermissionController::class, 'showMultiple']);
         Route::apiResource('permissions', PermissionController::class);
 
     });

@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Admin\PermissionMultipleUpdateRequest;
 use App\Http\Requests\Admin\PermissionStoreRequest;
 use App\Http\Requests\Admin\PermissionUpdateRequest;
+use App\Http\Resources\PermissionMultipleResource;
 use App\Http\Resources\PermissionResource;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
@@ -62,17 +64,33 @@ class PermissionController extends Controller
         $search = $request->input('search');
         // \Log::debug("sortby, sortOrder||". $sortBy." : ".$sortOrder);
 
-        $permissions = Permission::query()
-                    ->when($search, function($query) use($search){
-                        return $query
-                            ->where('name', 'LIKE', "%{$search}%")
-                            ->orWhere('module', 'LIKE', "%{$search}%")
-                            ->orWhere('action', 'LIKE', "%{$search}%");
-                    })
-                    ->orderBy($sortBy, $sortOrder)
-                    ->paginate($request->input('items_per_page'));
-        if($permissions){
-            return PermissionResource::collection($permissions);
+         // Your raw SQL query to group by 'category' and concatenate 'action' values
+        $query = "
+            SELECT module, GROUP_CONCAT(action) as actions
+            FROM permissions
+            GROUP BY module
+        ";
+
+        // Execute the raw query
+        $groupedResults = \DB::select($query);
+
+        // Paginate the raw results manually
+        $perPage = $request->input('items_per_page');
+        $currentPage = $request->input('page');
+        $total = count($groupedResults);
+        $start = ($currentPage - 1) * $perPage;
+        $slicedResults = array_slice($groupedResults, $start, $perPage);
+
+        $paginatedResults = new LengthAwarePaginator(
+            $slicedResults,
+            $total,
+            $perPage,
+            $currentPage,
+        );
+
+        if($total != 0){
+            // return $paginatedResults;
+            return PermissionMultipleResource::collection($paginatedResults);
         }
         return $this->error('','No data found',404);
     }
@@ -108,11 +126,11 @@ class PermissionController extends Controller
     /**
      * Display the specified resource by module.
      */
-    public function showMultiple(Permission $permission)
+    public function showMultiple($module = null)
     {
-        $actions = Permission::where('module', $permission->module)->get()?->pluck('action')?->toArray() ?? [];
+        $actions = Permission::where('module', $module)->get()?->pluck('action')?->toArray() ?? [];
         $data = [
-            'module' => $permission->module,
+            'module' => $module,
             'actions' => $actions,
         ];
         return $this->success(['data' => $data]);
@@ -153,6 +171,7 @@ class PermissionController extends Controller
         }
 
         \DB::commit();
+        $module = $request->input('module');
         $actions = Permission::where('module', $module)->get()?->pluck('action')?->toArray() ?? [];
         $data = [
             'module' => $module,
