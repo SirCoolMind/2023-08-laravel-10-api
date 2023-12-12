@@ -25,6 +25,7 @@ Route::prefix('lookup')->group(function(){
 Route::group(['middleware' => ['auth:sanctum']], function(){
 
     Route::get('transaction-type', [LookupController::class, 'transactionType']);
+    Route::get('permission-based-on-module', [LookupController::class, 'permissionBasedOnModule']);
 
 
 
