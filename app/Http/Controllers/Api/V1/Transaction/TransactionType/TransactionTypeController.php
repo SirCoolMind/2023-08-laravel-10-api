@@ -40,6 +40,7 @@ class TransactionTypeController extends Controller
                 return $query
                     ->where('name', 'LIKE', "%{$search}%");
             })
+            ->where('user_id', \Auth::user()->id)
             ->orderBy($sortBy, $sortOrder)
             ->paginate($request->input('items_per_page'));
 
@@ -62,12 +63,20 @@ class TransactionTypeController extends Controller
      */
     public function store(StoreTransactionTypeRequest $request)
     {
+        \DB::beginTransaction();
         try {
             $transactionType =  TransactionType::create($request->validated());
+            $transactionType->fill([
+                'user_id' => \Auth::user()->id,
+            ]);
+            $transactionType->save();
+
         } catch (\Throwable $e) {
+            \DB::rollback();
             return $this->error(['detail' => $e->getMessage()],'', 422);
         }
 
+        \DB::commit();
         return $this->success(['data' => TransactionTypeResource::make($transactionType)]);
     }
 
@@ -76,7 +85,14 @@ class TransactionTypeController extends Controller
      */
     public function show(TransactionType $transactionType)
     {
-        return $this->success(['data' => TransactionTypeResource::make($transactionType)]);
+        $havePermit = false;
+        if($transactionType->user_id == \Auth::user()->id)
+            $havePermit = true;
+
+        if($havePermit)
+            return $this->success(['data' => TransactionTypeResource::make($transactionType)]);
+        else
+            return $this->error(['detail' => "Action not permitted"], "Action not permitted", 422);
     }
 
     /**
@@ -96,13 +112,16 @@ class TransactionTypeController extends Controller
      */
     public function update(UpdateTransactionTypeRequest $request, TransactionType $transactionType)
     {
-
+        \DB::beginTransaction();
         try {
             $transactionType->update($request->validated());
+
         } catch (\Throwable $e) {
+            \DB::rollback();
             return $this->error(['detail' => $e->getMessage()],'', 422);
         }
 
+        \DB::commit();
         return $this->success(['data' => TransactionTypeResource::make($transactionType)]);
     }
 
