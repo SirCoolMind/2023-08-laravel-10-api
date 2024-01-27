@@ -44,7 +44,7 @@ class UserController extends Controller
                     ->orderBy($sortBy, $sortOrder)
                     ->paginate($request->input('items_per_page'));
         if($users){
-            return \App\Http\Resources\UserResource::collection($users);
+            return $this->success(\App\Http\Resources\UserResource::collection($users)->resource);
         }
         return $this->error('','No data found',404);
     }
