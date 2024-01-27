@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2bc45dce-151a-401f-affa-5673a723d156",
+		"_postman_id": "ea58e54e-471b-4b1e-a19c-9337bece5e2a",
 		"name": "laravel-10-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "16714455"
@@ -356,6 +356,213 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lookup",
+			"item": [
+				{
+					"name": "Permission Based On Module",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/lookup/permission-based-on-module",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"lookup",
+								"permission-based-on-module"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Money Tracker",
+			"item": [
+				{
+					"name": "Transaction Types",
+					"item": [
+						{
+							"name": "Retrieve Listing TransactionType Listing",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/v1/transaction-types",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transaction-types"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrieve a TransactionType",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domain}}/api/v1/transaction-types/1",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transaction-types",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Store TransactionType",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Transport",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Oil, maintenance, parking",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{domain}}/api/v1/transaction-types",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transaction-types"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update TransactionType",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Transport 2",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Oil, maintenance, parking 2",
+											"type": "text"
+										},
+										{
+											"key": "_method",
+											"value": "PUT",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{domain}}/api/v1/transaction-types/6",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transaction-types",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a transaction type",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/v1/tasks/11",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"tasks",
+										"11"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}

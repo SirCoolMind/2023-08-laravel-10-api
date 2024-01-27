@@ -54,9 +54,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
         Route::patch('/tasks/{task}/complete', CompleteTaskController::class);
 
         Route::apiResource('transactions', TransactionController::class);
-        Route::prefix('transaction')->group(function(){
-            Route::apiResource('/transaction-types', TransactionTypeController::class);
-        });
+        Route::apiResource('transaction-types', TransactionTypeController::class);
     });
 
 });
