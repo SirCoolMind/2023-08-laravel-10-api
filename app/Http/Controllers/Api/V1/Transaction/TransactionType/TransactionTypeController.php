@@ -43,7 +43,10 @@ class TransactionTypeController extends Controller
             ->orderBy($sortBy, $sortOrder)
             ->paginate($request->input('items_per_page'));
 
-        return TransactionTypeResource::collection($transactionTypes);
+        if($transactionTypes){
+            return $this->success(TransactionTypeResource::collection($transactionTypes)->resource);
+        }
+        return $this->error('','No data found',404);
     }
 
     /**
@@ -73,7 +76,7 @@ class TransactionTypeController extends Controller
      */
     public function show(TransactionType $transactionType)
     {
-        return TransactionTypeResource::make($transactionType);
+        return $this->success(['data' => TransactionTypeResource::make($transactionType)]);
     }
 
     /**
@@ -82,7 +85,7 @@ class TransactionTypeController extends Controller
     public function edit(TransactionType $transactionType)
     {
         if ($transactionType) {
-            return TransactionTypeResource::make($transactionType);
+            return $this->success(['data' => TransactionTypeResource::make($transactionType)]);
         } else {
             return response()->json(['message' => __('Record not found.')], 404);
         }
@@ -109,7 +112,7 @@ class TransactionTypeController extends Controller
     public function destroy(TransactionType $transactionType)
     {
         try {
-            // $transactionType->delete();
+            $transactionType->delete();
         } catch (\Exception $e) {
             return $this->error(['detail' => $e->getMessage()],'', 422);
         }
