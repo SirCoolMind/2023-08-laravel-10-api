@@ -43,7 +43,7 @@ class PermissionController extends Controller
                     ->orderBy($sortBy, $sortOrder)
                     ->paginate($request->input('items_per_page'));
         if($permissions){
-            return PermissionResource::collection($permissions);
+            return $this->success(PermissionResource::collection($permissions)->resource);
         }
         return $this->error('','No data found',404);
     }
@@ -90,7 +90,7 @@ class PermissionController extends Controller
 
         if($total != 0){
             // return $paginatedResults;
-            return PermissionMultipleResource::collection($paginatedResults);
+            return $this->success(PermissionMultipleResource::collection($paginatedResults)->resource);
         }
         return $this->error('','No data found',404);
     }

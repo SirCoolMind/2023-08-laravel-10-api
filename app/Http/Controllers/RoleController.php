@@ -41,7 +41,7 @@ class RoleController extends Controller
                     ->orderBy($sortBy, $sortOrder)
                     ->paginate($request->input('items_per_page'));
         if($roles){
-            return RoleResource::collection($roles);
+            return $this->success(RoleResource::collection($roles)->resource);
         }
         return $this->error('','No data found',404);
     }
