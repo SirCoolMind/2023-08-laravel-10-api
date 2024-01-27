@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('category_id');
+            $table->bigInteger('user_id')->nullable();
+            $table->bigInteger('transaction_type_id');
             $table->decimal('spent_money',13,2);
             $table->datetime('spent_date');
             $table->text('remarks')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

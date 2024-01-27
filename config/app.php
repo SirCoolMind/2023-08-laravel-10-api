@@ -204,7 +204,7 @@ return [
 
     'date_format_javascript' => 'MM/DD/YYYY',
 
-    'datetime_format' => 'm/d/Y h:i A',
+    'datetime_format' => 'm/d/Y h:i A', //12/27/2023 10:00 AM
 
     'datetime_format_javascript' => 'MM/DD/YYYY h:i A',
 

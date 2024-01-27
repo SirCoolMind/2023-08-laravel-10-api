@@ -22,7 +22,7 @@ class StoreTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => 'required|exists:App\Models\TransactionType,id',
+            'transaction_type_id' => 'required|exists:App\Models\TransactionType,id',
             'spent_money' => 'required',
             'spent_date' => 'required|date_format:'.config('app.datetime_format'),
             'remarks' => 'nullable',
@@ -37,7 +37,7 @@ class StoreTransactionRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'category_id' => 'category',
+            'transaction_type_id' => 'category',
             'spent_money' => 'value of spent money',
             'spent_date' => 'date of spent money',
         ];

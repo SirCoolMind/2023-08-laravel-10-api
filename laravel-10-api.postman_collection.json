@@ -436,7 +436,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{domain}}/api/v1/transaction-types/1",
+									"raw": "{{domain}}/api/v1/transaction-types/11",
 									"host": [
 										"{{domain}}"
 									],
@@ -444,7 +444,7 @@
 										"api",
 										"v1",
 										"transaction-types",
-										"1"
+										"11"
 									]
 								}
 							},
@@ -522,7 +522,7 @@
 									]
 								},
 								"url": {
-									"raw": "{{domain}}/api/v1/transaction-types/6",
+									"raw": "{{domain}}/api/v1/transaction-types/9",
 									"host": [
 										"{{domain}}"
 									],
@@ -530,7 +530,7 @@
 										"api",
 										"v1",
 										"transaction-types",
-										"6"
+										"9"
 									]
 								}
 							},
@@ -557,6 +557,193 @@
 										"v1",
 										"transaction-types",
 										"9"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Transactions",
+					"item": [
+						{
+							"name": "Retrieve Listing Transaction Listing",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/v1/transaction",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transaction"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrieve a Transaction",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domain}}/api/v1/transactions/1",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transactions",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Store Transaction",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "transaction_type_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "spent_money",
+											"value": "10.301",
+											"type": "text"
+										},
+										{
+											"key": "spent_date",
+											"value": "01/27/2024 10:00 AM",
+											"type": "text"
+										},
+										{
+											"key": "remarks",
+											"value": "Test",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{domain}}/api/v1/transactions",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transactions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Transaction",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "transaction_type_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "spent_money",
+											"value": "10.301",
+											"type": "text"
+										},
+										{
+											"key": "spent_date",
+											"value": "01/27/2024 10:00 AM",
+											"type": "text"
+										},
+										{
+											"key": "remarks",
+											"value": "Test",
+											"type": "text"
+										},
+										{
+											"key": "_method",
+											"value": "PATCH",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{domain}}/api/v1/transactions/6",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transactions",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a transaction",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/v1/transactions/6",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"transactions",
+										"6"
 									]
 								}
 							},

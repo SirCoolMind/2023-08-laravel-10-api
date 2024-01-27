@@ -7,84 +7,92 @@ use App\Http\Requests\Transaction\StoreTransactionRequest;
 use App\Http\Requests\Transaction\UpdateTransactionRequest;
 use App\Http\Resources\Transaction\TransactionResource;
 use App\Models\Transaction;
+use App\Traits\HttpResponses;
 use Illuminate\Support\Carbon;
+use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use HttpResponses;
+
+    public function index(Request $request)
     {
-        $transactions = Transaction::all();
-        return TransactionResource::collection($transactions);
+        // * sort
+        $sortBy = '';
+        switch ($request->input('sort_by')) {
+            case 'category':
+                $sortBy = 'transaction_types.id';
+                break;
+            case 'money':
+                $sortBy = 'spent_money';
+                break;
+            case 'date':
+                $sortBy = 'spent_date';
+                break;
+            default:
+                $sortBy = 'created_at';
+                break;
+        }
+        $sortOrder = $request->input('sort_order') == "desc" ? "desc" : "asc";
+        $search = $request->input('search');
+
+        $transactions = Transaction::with($this->withRelations())
+            ->when($search, function($query) use($search){
+                return $query
+                    ->where('remarks', 'LIKE', "%{$search}%");
+            })
+            ->where('user_id', \Auth::user()->id)
+            ->orderBy($sortBy, $sortOrder)
+            ->paginate($request->input('items_per_page'));
+
+        if($transactions){
+            return $this->success(TransactionResource::collection($transactions)->resource);
+        }
+        return $this->error('','No data found',404);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreTransactionRequest $request)
-    {
-        // try to think, you want to do sepa
-       $transaction =  Transaction::create($request->validated());
-
-       if($transaction){
-            return response()->json([
-                'message' => "Data stored succesfully",
-                'data' => TransactionResource::make($transaction),
-            ], 200);
-       }else{
-        return response()->json([
-            'message' => 'Something went wrong',
-        ], 500);
-       }
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Transaction $transaction)
     {
-        return TransactionResource::make($transaction);
+        $havePermit = false;
+        if($transaction->user_id == \Auth::user()->id)
+            $havePermit = true;
+
+        if($havePermit)
+            return $this->success(['data' => TransactionResource::make($transaction)]);
+        else
+            return $this->error(['detail' => "Action not permitted"], "Action not permitted", 422);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Transaction $transaction)
+    public function store(StoreTransactionRequest $request)
     {
-        if ($transaction) {
-            return TransactionResource::make($transaction);
-        } else {
-            return response()->json(['message' => __('Record not found.')], 404);
+        \DB::beginTransaction();
+        try {
+            $transaction = Transaction::create($request->validated());
+            $transaction->fill([
+                'user_id' => \Auth::user()->id,
+            ]);
+            $transaction->save();
+        } catch (\Throwable $e) {
+            \DB::rollback();
+            return $this->error(['detail' => $e->getMessage()],'', 422);
         }
+
+        \DB::commit();
+        return $this->success(['data' => TransactionResource::make($transaction)]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateTransactionRequest $request, Transaction $transaction)
     {
-
-        $transaction->update($request->validated());
-        if($transaction){
-            return response()->json([
-                'message' => "Data stored succesfully",
-                'data' => TransactionResource::make($transaction),
-            ], 200);
-        }else{
-            return response()->json(['message' => 'Error saving record',], 500);
+        \DB::beginTransaction();
+        try {
+            $transaction->update($request->validated());
+        } catch (\Throwable $e) {
+            \DB::rollback();
+            return $this->error(['detail' => $e->getMessage()],'', 422);
         }
 
-        return TransactionResource::make($transaction);
+        \DB::commit();
+        return $this->success(['data' => TransactionResource::make($transaction)]);
     }
 
     /**
@@ -95,10 +103,16 @@ class TransactionController extends Controller
         try {
             $transaction->delete();
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error deleting record',], 500);
+            return $this->error(['detail' => $e->getMessage()],'', 422);
         }
-        return response()->json([
-            'message' => "Data deleted succesfully",
-        ], 200);
+        return $this->success([],"Data deleted successfully");
+    }
+
+
+    private function withRelations($newRelations = []){
+        return [
+            'transactionType',
+            'user',
+        ] + $newRelations;
     }
 }
