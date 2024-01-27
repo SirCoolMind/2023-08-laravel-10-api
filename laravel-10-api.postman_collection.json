@@ -548,15 +548,15 @@
 									}
 								],
 								"url": {
-									"raw": "{{domain}}/api/v1/tasks/11",
+									"raw": "{{domain}}/api/v1/transaction-types/9",
 									"host": [
 										"{{domain}}"
 									],
 									"path": [
 										"api",
 										"v1",
-										"tasks",
-										"11"
+										"transaction-types",
+										"9"
 									]
 								}
 							},
