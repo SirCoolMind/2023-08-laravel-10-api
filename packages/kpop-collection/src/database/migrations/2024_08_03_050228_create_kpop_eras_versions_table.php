@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('kpop_eras_versions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kpop_eras_id');
+            $table->foreignId('kpop_era_id');
             $table->string('name');
             $table->unsignedBigInteger('project_id');
             $table->timestamps();
