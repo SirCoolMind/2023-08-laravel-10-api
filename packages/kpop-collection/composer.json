@@ -1,0 +1,20 @@
+{
+    "name": "hafizruslan/kpopcollection",
+    "description": "Kpop Collection feature",
+    "type": "composer-plugin",
+    "license": "IMT",
+    "autoload": {
+        "psr-4": {
+            "HafizRuslan\\KpopCollection\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Muhammad Hafiz Ruslan",
+            "email": "hafizcoolman@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "prefer-stable": true
+}

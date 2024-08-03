@@ -159,6 +159,7 @@ return [
         /*
          * Package Service Providers...
          */
+        \HafizRuslan\KpopCollection\KpopCollectionServiceProvider::class,
 
         /*
          * Application Service Providers...
