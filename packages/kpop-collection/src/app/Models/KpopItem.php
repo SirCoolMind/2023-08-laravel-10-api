@@ -7,7 +7,7 @@ use HafizRuslan\KpopCollection\app\Models\KpopEra;
 
 class KpopItem extends Model
 {
-    protected $table = 'kpop_eras';
+    protected $table = 'kpop_items';
 
     /*relationship */
     public function era(){

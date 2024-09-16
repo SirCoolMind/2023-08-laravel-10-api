@@ -13,16 +13,19 @@ return new class extends Migration
     {
         Schema::create('kpop_items', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
-            $table->text('comment');
-            $table->integer('bought_price');
-            $table->string('bought_place');
-            $table->text('bought_comment');
+            $table->string('artist_name')->null5able()->comment("Artist Name");
+            $table->string('era_name')->nullable()->comment("Era or Album Name");
+            $table->string('version_name')->nullable()->comment("Can refer aespa template naming for each card");
+            $table->foreignId('kpop_era_id')->nullable()->comment("can ignore this first");
+            $table->foreignId('kpop_era_version_id')->nullable()->comment("can ignore this first");
+            $table->text('comment')->nullable()->comment("idk what to do yet");
+            $table->integer('bought_price')->nullable();
+            $table->string('bought_place')->nullable();
+            $table->text('bought_comment')->nullable();
             $table->foreignId('user_id');
             $table->foreignId('project_id');
             $table->timestamps();
 
-            $table->index('type');
             $table->index('bought_place');
         });
     }

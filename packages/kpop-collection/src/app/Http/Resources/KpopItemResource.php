@@ -1,0 +1,26 @@
+<?php
+namespace HafizRuslan\KpopCollection\app\Http\Resources;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class KpopItemResource extends JsonResource
+{
+    public function toArray($request)
+    {
+        return [
+            'id' => $this->id,
+            'artist_name' => $this->artist_name,
+            'era_name' => $this->era_name,
+            'version_name' => $this->version_name,
+            'kpop_era_id' => $this->kpop_era_id,
+            'kpop_era_version_id' => $this->kpop_era_version_id,
+            'comment' => $this->comment,
+            'bought_price' => $this->bought_price,
+            'bought_comment' => $this->bought_comment,
+            'user_id' => $this->user_id,
+            'project_id' => $this->project_id,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
+    }
+}
