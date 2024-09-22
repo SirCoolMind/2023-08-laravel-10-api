@@ -1116,7 +1116,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{domain}}/api/kpop/v1/admin/kpop-item/1",
+									"raw": "{{domain}}/api/kpop/v1/admin/kpop-item/10",
 									"host": [
 										"{{domain}}"
 									],
@@ -1126,7 +1126,7 @@
 										"v1",
 										"admin",
 										"kpop-item",
-										"1"
+										"10"
 									]
 								}
 							},
@@ -1144,13 +1144,59 @@
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"artist_name\" : \"Winter\",\r\n    \"era_name\" : \"Girls\",\r\n    \"version_name\" : \"US Exclusive Photobook\",\r\n    \"kpop_era_id\" : \"1\",\r\n    \"kpop_era_version_id\" : \"1\",\r\n    \"comment\" : \"test\",\r\n    \"bought_price\" : \"10\",\r\n    \"bought_place\" : \"twitter\",\r\n    \"bought_comment\" : \"can't believe so cheap price\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "artist_name",
+											"value": "Winter",
+											"type": "text"
+										},
+										{
+											"key": "era_name",
+											"value": "Girls",
+											"type": "text"
+										},
+										{
+											"key": "version_name",
+											"value": "US Exclusive Photobook",
+											"type": "text"
+										},
+										{
+											"key": "kpop_era_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "kpop_era_version_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "comment",
+											"value": "test",
+											"type": "text"
+										},
+										{
+											"key": "bought_price",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "bought_place",
+											"value": "twitter",
+											"type": "text"
+										},
+										{
+											"key": "bought_comment",
+											"value": "can't believe so cheap price",
+											"type": "text"
+										},
+										{
+											"key": "photocard_image",
+											"type": "file",
+											"src": "/C:/Users/hafiz/OneDrive/Pictures/Screenshots/Screenshot 2024-09-08 200018.png"
 										}
-									}
+									]
 								},
 								"url": {
 									"raw": "{{domain}}/api/kpop/v1/admin/kpop-item",
@@ -1228,6 +1274,38 @@
 										"admin",
 										"kpop-item",
 										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PC Image URL",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domain}}/files/download/3?expires=1727038877&signature=d500adb762428eb2f4dbe6b5ee1e1da832065e57744e4ccc58cb1cbc25f414b7",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"files",
+										"download",
+										"3"
+									],
+									"query": [
+										{
+											"key": "expires",
+											"value": "1727038877"
+										},
+										{
+											"key": "signature",
+											"value": "d500adb762428eb2f4dbe6b5ee1e1da832065e57744e4ccc58cb1cbc25f414b7"
+										}
 									]
 								}
 							},

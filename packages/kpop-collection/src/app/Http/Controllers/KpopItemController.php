@@ -4,6 +4,7 @@ namespace HafizRuslan\KpopCollection\app\Http\Controllers;
 use HafizRuslan\KpopCollection\app\Http\Resources\KpopItemResource;
 use HafizRuslan\KpopCollection\app\Models\KpopItem;
 use Illuminate\Http\Request;
+use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
 class KpopItemController extends \App\Http\Controllers\Controller {
 
@@ -167,7 +168,12 @@ class KpopItemController extends \App\Http\Controllers\Controller {
         $record->bought_comment = $request->input('bought_comment');
         $record->user_id = \Auth::user()->id;
         $record->project_id = 1;
+
         $record->save();
+
+        if ($request->hasFile('photocard_image')) {
+            UploadedFile::store($record, 'photocard_image', $request->file('photocard_image'));
+        }
 
         return $record;
     }
@@ -191,7 +197,7 @@ class KpopItemController extends \App\Http\Controllers\Controller {
             'version_name' => ['required'],
             'kpop_era_id' => ['required'],
             'kpop_era_version_id' => ['required'],
-
+            'photocard_image' => ['nullable','file','image','max:2048'],
         ] + $otherRules;
 
         $messages = [];
