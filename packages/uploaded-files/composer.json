@@ -1,0 +1,20 @@
+{
+    "name": "sircoolmind/uploaded-files",
+    "description": "Simply local file management for Laravel",
+    "type": "composer-plugin",
+    "license": "IMT",
+    "autoload": {
+        "psr-4": {
+            "SirCoolMind\\UploadedFiles\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Muhammad Hafiz Ruslan",
+            "email": "hafizcoolman@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "prefer-stable": true
+}

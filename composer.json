@@ -25,7 +25,8 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "HafizRuslan\\KpopCollection\\": "packages/kpop-collection/src/"
+            "HafizRuslan\\KpopCollection\\": "packages/kpop-collection/src/",
+            "SirCoolMind\\UploadedFiles\\": "packages/uploaded-files/src/"
         }
     },
     "autoload-dev": {

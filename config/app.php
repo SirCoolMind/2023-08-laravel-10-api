@@ -160,6 +160,7 @@ return [
          * Package Service Providers...
          */
         \HafizRuslan\KpopCollection\KpopCollectionServiceProvider::class,
+        \SirCoolMind\UploadedFiles\UploadedFilesServiceProvider::class,
 
         /*
          * Application Service Providers...
