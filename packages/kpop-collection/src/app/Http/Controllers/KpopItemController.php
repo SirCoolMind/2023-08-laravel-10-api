@@ -171,8 +171,8 @@ class KpopItemController extends \App\Http\Controllers\Controller {
 
         $record->save();
 
-        if ($request->hasFile('photocard_image')) {
-            UploadedFile::store($record, 'photocard_image', $request->file('photocard_image'));
+        if ($request->hasFile('photocard_image_upload')) {
+            UploadedFile::store($record, 'photocard_image', $request->file('photocard_image_upload'));
         }
 
         return $record;
