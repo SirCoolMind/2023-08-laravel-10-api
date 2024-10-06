@@ -3,6 +3,7 @@ namespace HafizRuslan\KpopCollection\app\Http\Controllers;
 
 use HafizRuslan\KpopCollection\app\Http\Resources\KpopEraResource;
 use HafizRuslan\KpopCollection\app\Models\KpopEra;
+use HafizRuslan\KpopCollection\app\Models\KpopEraVersion;
 use Illuminate\Http\Request;
 
 class KpopEraController extends \App\Http\Controllers\Controller {
@@ -70,6 +71,7 @@ class KpopEraController extends \App\Http\Controllers\Controller {
             \DB::beginTransaction();
 
             $record = $this->setRecord($request, $record);
+            $this->setVersions($request, $record);
             $record->load($this->withRelations());
 
             \DB::commit();
@@ -91,6 +93,9 @@ class KpopEraController extends \App\Http\Controllers\Controller {
 
     public function update(Request $request, $id)
     {
+        // \Log::debug($request->all());
+        \Log::debug($request->input('versions'));
+        // dd();
         if ($return = $this->validateScope()) {
             return $return;
         }
@@ -119,6 +124,7 @@ class KpopEraController extends \App\Http\Controllers\Controller {
             \DB::beginTransaction();
 
             $record = $this->setRecord($request, $record);
+            $this->setVersions($request, $record);
             $record->load($this->withRelations());
 
             \DB::commit();
@@ -167,6 +173,56 @@ class KpopEraController extends \App\Http\Controllers\Controller {
         return $record;
     }
 
+    private function setVersions($request, $record)
+    {
+        $kpopEraId = $record->id;
+
+        // Get existing data and map them by ID
+        $existingData = KpopEraVersion::where('kpop_era_id', $kpopEraId)->get()->keyBy('id');
+        $existingIds = $existingData->pluck('id')->toArray();
+
+        // Create or update versions based on ID presence
+        $incomingData = $request->input('versions', []);
+        $incomingIds = array_filter(array_column($incomingData, 'id'));
+        foreach ($incomingData as $version) {
+            // Check if ID exists; if not, create a new Version instance
+            $itemRecord = empty($version['id']) ? new KpopEraVersion : $existingData[$version['id']];
+
+            $itemRecord->name = $version['name'];
+            $itemRecord->kpop_era_id = $kpopEraId;
+            $itemRecord->project_id = $request->input('project_id');
+            $itemRecord->save();
+        }
+
+        // Delete missing versions
+        $toDelete = array_diff($existingIds, $incomingIds);
+        KpopEraVersion::whereIn('id', $toDelete)->delete();
+
+        // // Create new versions
+        // $toCreate = collect($incomingData)->filter(fn($v) => empty($v['id']));
+        // foreach ($toCreate as $version) {
+        //     $newVersion = new Version();
+        //     $newVersion->name = $version['name'];
+        //     $newVersion->kpop_era_id = $kpopEraId;
+        //     $newVersion->project_id = $request->input('project_id');
+        //     // Assign other properties if needed
+        //     $newVersion->save();
+        // }
+
+        // // Update existing versions
+        // $toUpdate = collect($incomingData)->filter(fn($v) => !empty($v['id']));
+        // foreach ($toUpdate as $version) {
+        //     $existingVersion = $existingVersions[$version['id']];
+        //     $originals = $existingVersion->getOriginal();  // Get original values
+
+        //     $existingVersion->name = $version['name'];
+        //     $existingVersion->project_id = $request->input('project_id');
+        //     // Update other fields as needed
+        //     $existingVersion->save();
+        // }
+
+    }
+
     private function withRelations($otherRelations = [])
     {
         $relations = ['versions'];
@@ -176,12 +232,15 @@ class KpopEraController extends \App\Http\Controllers\Controller {
 
     private function getValidator($request, $otherRules = [])
     {
-        $rules =[
+        $rules = [
             'name' => ['required', 'unique:kpop_eras,name'],
-
-        ] + $otherRules;
+            'versions' => ['array'],
+            'versions.*.name' => ['required','sometimes'],
+        ];
+        $rules = array_merge($rules, $otherRules);
 
         $messages = [];
+        $messages = array_merge($messages, $otherMessages);
 
         $validator = \Validator::make($request->all(), $rules, $messages);
 
