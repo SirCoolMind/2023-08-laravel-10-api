@@ -177,13 +177,14 @@ class KpopEraVersionController extends \App\Http\Controllers\Controller {
 
     private function getValidator($request, $otherRules = [])
     {
-        $rules =[
+        $rules = [
             'name' => ['required'],
             'kpop_era_id' => ['required']
-
-        ] + $otherRules;
+        ];
+        $rules = array_merge($rules, $otherRules);
 
         $messages = [];
+        $messages = array_merge($messages, $otherMessages);
 
         $validator = \Validator::make($request->all(), $rules, $messages);
 

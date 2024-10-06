@@ -190,17 +190,19 @@ class KpopItemController extends \App\Http\Controllers\Controller {
         return array_merge($relations, $otherRelations);
     }
 
-    private function getValidator($request, $otherRules = [])
+    private function getValidator($request, $otherRules = [], $otherMessages = [])
     {
-        $rules =[
+        $rules = [
             'artist_name' => ['required'],
             'version_name' => ['required'],
             'kpop_era_id' => ['required'],
             'kpop_era_version_id' => ['required'],
             'photocard_image' => ['nullable','file','image','max:2048'],
-        ] + $otherRules;
+        ];
+        $rules = array_merge($rules, $otherRules);
 
         $messages = [];
+        $messages = array_merge($messages, $otherMessages);
 
         $validator = \Validator::make($request->all(), $rules, $messages);
 
