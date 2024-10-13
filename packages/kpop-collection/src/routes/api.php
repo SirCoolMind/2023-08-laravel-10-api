@@ -12,6 +12,8 @@ Route::group(['prefix' => 'api/kpop/v1'], function(){
         Route::apiResource('admin/kpop-era', KpopEraController::class);
         Route::apiResource('admin/kpop-era-version', KpopEraVersionController::class);
         Route::apiResource('admin/kpop-item', KpopItemController::class);
+
+        Route::group([], base_path('packages/kpop-collection/src/routes/lookup.php'));
     });
 
     // Public
