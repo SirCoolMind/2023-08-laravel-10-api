@@ -158,8 +158,6 @@ class KpopItemController extends \App\Http\Controllers\Controller {
         $originals = $record->getOriginal();
 
         $record->artist_name = $request->input('artist_name');
-        $record->era_name = $request->input('era_name');
-        $record->version_name = $request->input('version_name');
         $record->kpop_era_id = $request->input('kpop_era_id.id');
         $record->kpop_era_version_id = $request->input('kpop_era_version_id.id');
         $record->comment = $request->input('comment');

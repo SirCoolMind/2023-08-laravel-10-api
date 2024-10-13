@@ -23,8 +23,6 @@ class KpopItemResource extends JsonResource
             'id' => $this->id,
             'photocard_image' => $imageData,
             'artist_name' => $this->artist_name,
-            'era_name' => $this->era_name,
-            'version_name' => $this->version_name,
             'kpop_era_id' => new KpopEraResource($this->whenLoaded('era')),
             'kpop_era_version_id' => new KpopEraVersionResource($this->whenLoaded('version')),
             'comment' => $this->comment,

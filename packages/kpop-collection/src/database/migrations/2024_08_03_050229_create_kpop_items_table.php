@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('kpop_items', function (Blueprint $table) {
             $table->id();
             $table->string('artist_name')->null5able()->comment("Artist Name");
-            $table->string('era_name')->nullable()->comment("Era or Album Name");
-            $table->string('version_name')->nullable()->comment("Can refer aespa template naming for each card");
             $table->foreignId('kpop_era_id')->nullable()->comment("can ignore this first");
             $table->foreignId('kpop_era_version_id')->nullable()->comment("can ignore this first");
             $table->text('comment')->nullable()->comment("idk what to do yet");
