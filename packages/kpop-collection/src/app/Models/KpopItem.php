@@ -17,8 +17,8 @@ class KpopItem extends Model
         return $this->hasOne(KpopEra::class, 'id', 'kpop_era_id');
     }
 
-    public function versions(){
-        return $this->hasOne(KpopEraVersion::class, 'id', 'kpop_eras_version_id');
+    public function version(){
+        return $this->hasOne(KpopEraVersion::class, 'id', 'kpop_era_version_id');
     }
 
     public function photocardImage(){

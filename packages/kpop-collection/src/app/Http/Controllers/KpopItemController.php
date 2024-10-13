@@ -152,7 +152,7 @@ class KpopItemController extends \App\Http\Controllers\Controller {
         }
     }
 
-    private function setRecord($request, $record)
+    private function setRecord(Request $request, $record)
     {
         $isNew = $record->exists ? true : false;
         $originals = $record->getOriginal();
@@ -160,8 +160,8 @@ class KpopItemController extends \App\Http\Controllers\Controller {
         $record->artist_name = $request->input('artist_name');
         $record->era_name = $request->input('era_name');
         $record->version_name = $request->input('version_name');
-        $record->kpop_era_id = $request->input('kpop_era_id');
-        $record->kpop_era_version_id = $request->input('kpop_era_version_id');
+        $record->kpop_era_id = $request->input('kpop_era_id.id');
+        $record->kpop_era_version_id = $request->input('kpop_era_version_id.id');
         $record->comment = $request->input('comment');
         $record->bought_price = $request->input('bought_price');
         $record->bought_place = $request->input('bought_place');
@@ -183,8 +183,8 @@ class KpopItemController extends \App\Http\Controllers\Controller {
     private function withRelations($otherRelations = [])
     {
         $relations = [
-            // 'version',
-            // 'era',
+            'version',
+            'era',
         ];
 
         return array_merge($relations, $otherRelations);
@@ -194,7 +194,7 @@ class KpopItemController extends \App\Http\Controllers\Controller {
     {
         $rules = [
             'artist_name' => ['required'],
-            'version_name' => ['required'],
+            // 'version_name' => ['required'],
             'kpop_era_id' => ['required'],
             'kpop_era_version_id' => ['required'],
             'photocard_image' => ['nullable','file','image','max:2048'],
