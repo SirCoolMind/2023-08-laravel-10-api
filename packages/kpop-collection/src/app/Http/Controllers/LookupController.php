@@ -1,14 +1,15 @@
 <?php
+
 namespace HafizRuslan\KpopCollection\app\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class LookupController extends \App\Http\Controllers\Controller {
-
+class LookupController extends \App\Http\Controllers\Controller
+{
     public $defaultProjectId = 111111;
 
-    public function kpopEras() {
-
+    public function kpopEras()
+    {
         if ($return = $this->validateScope()) {
             return $return;
         }
@@ -23,8 +24,8 @@ class LookupController extends \App\Http\Controllers\Controller {
         return \HafizRuslan\KpopCollection\app\Http\Resources\KpopEraResource::collection($record);
     }
 
-    public function kpopVersions(Request $request) {
-
+    public function kpopVersions(Request $request)
+    {
         if ($return = $this->validateScope()) {
             return $return;
         }
@@ -33,7 +34,7 @@ class LookupController extends \App\Http\Controllers\Controller {
         $kpopEraId = $request->input('kpop_era_id');
 
         $record = \HafizRuslan\KpopCollection\app\Models\KpopEraVersion::query()
-            ->when($kpopEraId, function($query) use($kpopEraId) {
+            ->when($kpopEraId, function ($query) use ($kpopEraId) {
                 $query->where('kpop_era_id', $kpopEraId);
             })
             ->where('project_id', $projectId)
@@ -54,7 +55,7 @@ class LookupController extends \App\Http\Controllers\Controller {
         if ($validator->fails()) {
             return response()->json([
                 'message' => __('Invalid scope'),
-                'errors' => $validator->errors(),
+                'errors'  => $validator->errors(),
             ], 422);
         }
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace HafizRuslan\KpopCollection\app\Http\Controllers;
 
 use HafizRuslan\KpopCollection\app\Http\Resources\KpopItemResource;
@@ -6,10 +7,10 @@ use HafizRuslan\KpopCollection\app\Models\KpopItem;
 use Illuminate\Http\Request;
 use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
-class KpopItemController extends \App\Http\Controllers\Controller {
-
-    public function index() {
-
+class KpopItemController extends \App\Http\Controllers\Controller
+{
+    public function index()
+    {
         if ($return = $this->validateScope()) {
             return $return;
         }
@@ -44,8 +45,9 @@ class KpopItemController extends \App\Http\Controllers\Controller {
         $record = KpopItem::with($this->withRelations())
             ->find($id);
 
-        if (!$record)
+        if (!$record) {
             return response()->json(['message' => __('Record not found.')], 404);
+        }
 
         return new KpopItemResource($record);
     }
@@ -61,11 +63,11 @@ class KpopItemController extends \App\Http\Controllers\Controller {
         if ($fails) {
             return response()->json([
                 'message' => __('Error saving record.'),
-                'errors' => $validator->errors(),
+                'errors'  => $validator->errors(),
             ], 500);
         }
 
-        $record = new KpopItem;
+        $record = new KpopItem();
 
         try {
             \DB::beginTransaction();
@@ -75,18 +77,18 @@ class KpopItemController extends \App\Http\Controllers\Controller {
 
             \DB::commit();
         } catch (\Throwable $th) {
-
             \DB::rollback();
             \Log::error($th->getMessage());
+
             return response()->json([
                 'message' => __('Error saving record.'),
-                'errors' => $th->getMessage(),
+                'errors'  => $th->getMessage(),
             ], 500);
         }
 
         return response()->json([
             'message' => __('Record successfully created.'),
-            'data' => new KpopItemResource($record),
+            'data'    => new KpopItemResource($record),
         ]);
     }
 
@@ -101,14 +103,14 @@ class KpopItemController extends \App\Http\Controllers\Controller {
         if ($fails) {
             return response()->json([
                 'message' => __('Error saving record.'),
-                'errors' => $validator->errors(),
+                'errors'  => $validator->errors(),
             ], 500);
         }
 
         $record = KpopItem::with($this->withRelations())
             ->find($id);
 
-        if (! $record) {
+        if (!$record) {
             return response()->json(['message' => __('Record not found.')], 404);
         }
 
@@ -120,18 +122,18 @@ class KpopItemController extends \App\Http\Controllers\Controller {
 
             \DB::commit();
         } catch (\Throwable $th) {
-
             \DB::rollback();
             \Log::error($th->getMessage());
+
             return response()->json([
                 'message' => __('Error saving record.'),
-                'errors' => $th->getMessage(),
+                'errors'  => $th->getMessage(),
             ], 500);
         }
 
         return response()->json([
             'message' => __('Record successfully created.'),
-            'data' => new KpopItemResource($record),
+            'data'    => new KpopItemResource($record),
         ]);
     }
 
@@ -176,8 +178,6 @@ class KpopItemController extends \App\Http\Controllers\Controller {
         return $record;
     }
 
-
-
     private function withRelations($otherRelations = [])
     {
         $relations = [
@@ -193,9 +193,9 @@ class KpopItemController extends \App\Http\Controllers\Controller {
         $rules = [
             'artist_name' => ['required'],
             // 'version_name' => ['required'],
-            'kpop_era_id' => ['required'],
+            'kpop_era_id'         => ['required'],
             'kpop_era_version_id' => ['required'],
-            'photocard_image' => ['nullable','file','image','max:2048'],
+            'photocard_image'     => ['nullable', 'file', 'image', 'max:2048'],
         ];
         $rules = array_merge($rules, $otherRules);
 
@@ -218,7 +218,7 @@ class KpopItemController extends \App\Http\Controllers\Controller {
         if ($validator->fails()) {
             return response()->json([
                 'message' => __('Invalid scope'),
-                'errors' => $validator->errors(),
+                'errors'  => $validator->errors(),
             ], 422);
         }
     }

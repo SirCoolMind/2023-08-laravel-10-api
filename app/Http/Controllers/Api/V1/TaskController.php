@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
+use App\Models\Task;
 
 class TaskController extends Controller
 {
@@ -16,6 +16,7 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Task::all();
+
         return TaskResource::collection($tasks);
     }
 
@@ -24,7 +25,6 @@ class TaskController extends Controller
      */
     public function create()
     {
-
     }
 
     /**
@@ -32,18 +32,18 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-       $task =  Task::create($request->validated());
+        $task = Task::create($request->validated());
 
-       if($task){
+        if ($task) {
             return response()->json([
-                'message' => "Data stored succesfully",
-                'data' => TaskResource::make($task),
+                'message' => 'Data stored succesfully',
+                'data'    => TaskResource::make($task),
             ], 200);
-       }else{
-        return response()->json([
-            'message' => 'Something went wrong',
-        ], 500);
-       }
+        } else {
+            return response()->json([
+                'message' => 'Something went wrong',
+            ], 500);
+        }
     }
 
     /**
@@ -78,13 +78,13 @@ class TaskController extends Controller
     {
         $task->update($request->validated());
 
-        if($task){
+        if ($task) {
             return response()->json([
-                'message' => "Data stored succesfully",
-                'data' => TaskResource::make($task),
+                'message' => 'Data stored succesfully',
+                'data'    => TaskResource::make($task),
             ], 200);
-        }else{
-            return response()->json(['message' => 'Error saving record',], 500);
+        } else {
+            return response()->json(['message' => 'Error saving record'], 500);
         }
 
         return TaskResource::make($task);
@@ -98,10 +98,11 @@ class TaskController extends Controller
         try {
             $task->delete();
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Error deleting record',], 500);
+            return response()->json(['message' => 'Error deleting record'], 500);
         }
+
         return response()->json([
-            'message' => "Data deleted succesfully",
+            'message' => 'Data deleted succesfully',
         ], 200);
     }
 }

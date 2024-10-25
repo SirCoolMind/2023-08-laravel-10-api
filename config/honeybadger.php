@@ -22,7 +22,7 @@ return [
     /**
      * To disable exception reporting, set this to false.
      */
-    'report_data' => ! in_array(env('APP_ENV'), ['local', 'testing']),
+    'report_data' => !in_array(env('APP_ENV'), ['local', 'testing']),
 
     /**
      * When reporting an exception, we'll automatically include relevant environment variables.
@@ -82,8 +82,8 @@ return [
      */
     'handlers' => [
         'exception' => true,
-        'error' => true,
-        'shutdown' => true,
+        'error'     => true,
+        'shutdown'  => true,
     ],
 
     /**
@@ -92,8 +92,8 @@ return [
      */
     'client' => [
         'timeout' => 15,
-        'proxy' => [],
-        'verify' => env('HONEYBADGER_VERIFY_SSL', true),
+        'proxy'   => [],
+        'verify'  => env('HONEYBADGER_VERIFY_SSL', true),
     ],
 
     /**

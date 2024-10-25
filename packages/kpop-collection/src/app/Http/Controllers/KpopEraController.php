@@ -1,4 +1,5 @@
 <?php
+
 namespace HafizRuslan\KpopCollection\app\Http\Controllers;
 
 use HafizRuslan\KpopCollection\app\Http\Resources\KpopEraResource;
@@ -6,10 +7,10 @@ use HafizRuslan\KpopCollection\app\Models\KpopEra;
 use HafizRuslan\KpopCollection\app\Models\KpopEraVersion;
 use Illuminate\Http\Request;
 
-class KpopEraController extends \App\Http\Controllers\Controller {
-
-    public function index() {
-
+class KpopEraController extends \App\Http\Controllers\Controller
+{
+    public function index()
+    {
         if ($return = $this->validateScope()) {
             return $return;
         }
@@ -44,8 +45,9 @@ class KpopEraController extends \App\Http\Controllers\Controller {
         $record = KpopEra::with($this->withRelations())
             ->find($id);
 
-        if (!$record)
+        if (!$record) {
             return response()->json(['message' => __('Record not found.')], 404);
+        }
 
         return new KpopEraResource($record);
     }
@@ -61,11 +63,11 @@ class KpopEraController extends \App\Http\Controllers\Controller {
         if ($fails) {
             return response()->json([
                 'message' => __('Error saving record.'),
-                'errors' => $validator->errors(),
+                'errors'  => $validator->errors(),
             ], 500);
         }
 
-        $record = new KpopEra;
+        $record = new KpopEra();
 
         try {
             \DB::beginTransaction();
@@ -76,18 +78,18 @@ class KpopEraController extends \App\Http\Controllers\Controller {
 
             \DB::commit();
         } catch (\Throwable $th) {
-
             \DB::rollBack();
             \Log::error($th->getMessage());
+
             return response()->json([
                 'message' => __('Error saving record.'),
-                'errors' => $th->getMessage(),
+                'errors'  => $th->getMessage(),
             ], 500);
         }
 
         return response()->json([
             'message' => __('Record successfully created.'),
-            'data' => new KpopEraResource($record),
+            'data'    => new KpopEraResource($record),
         ]);
     }
 
@@ -101,7 +103,7 @@ class KpopEraController extends \App\Http\Controllers\Controller {
         }
 
         $rules = [
-            'name' => 'required|unique:kpop_eras,name,'.$id
+            'name' => 'required|unique:kpop_eras,name,'.$id,
         ];
 
         $validator = $this->getValidator($request, $rules);
@@ -109,14 +111,14 @@ class KpopEraController extends \App\Http\Controllers\Controller {
         if ($fails) {
             return response()->json([
                 'message' => __('Error saving record.'),
-                'errors' => $validator->errors(),
+                'errors'  => $validator->errors(),
             ], 500);
         }
 
         $record = KpopEra::with($this->withRelations())
             ->find($id);
 
-        if (! $record) {
+        if (!$record) {
             return response()->json(['message' => __('Record not found.')], 404);
         }
 
@@ -129,18 +131,18 @@ class KpopEraController extends \App\Http\Controllers\Controller {
 
             \DB::commit();
         } catch (\Throwable $th) {
-
             \DB::rollBack();
             \Log::error($th->getMessage());
+
             return response()->json([
                 'message' => __('Error saving record.'),
-                'errors' => $th->getMessage(),
+                'errors'  => $th->getMessage(),
             ], 500);
         }
 
         return response()->json([
             'message' => __('Record successfully created.'),
-            'data' => new KpopEraResource($record),
+            'data'    => new KpopEraResource($record),
         ]);
     }
 
@@ -186,7 +188,7 @@ class KpopEraController extends \App\Http\Controllers\Controller {
         $incomingIds = array_filter(array_column($incomingData, 'id'));
         foreach ($incomingData as $version) {
             // Check if ID exists; if not, create a new Version instance
-            $itemRecord = empty($version['id']) ? new KpopEraVersion : $existingData[$version['id']];
+            $itemRecord = empty($version['id']) ? new KpopEraVersion() : $existingData[$version['id']];
 
             $itemRecord->name = $version['name'];
             $itemRecord->kpop_era_id = $kpopEraId;
@@ -220,7 +222,6 @@ class KpopEraController extends \App\Http\Controllers\Controller {
         //     // Update other fields as needed
         //     $existingVersion->save();
         // }
-
     }
 
     private function withRelations($otherRelations = [])
@@ -233,9 +234,9 @@ class KpopEraController extends \App\Http\Controllers\Controller {
     private function getValidator($request, $otherRules = [])
     {
         $rules = [
-            'name' => ['required', 'unique:kpop_eras,name'],
-            'versions' => ['array'],
-            'versions.*.name' => ['required','sometimes'],
+            'name'            => ['required', 'unique:kpop_eras,name'],
+            'versions'        => ['array'],
+            'versions.*.name' => ['required', 'sometimes'],
         ];
         $rules = array_merge($rules, $otherRules);
 
@@ -258,7 +259,7 @@ class KpopEraController extends \App\Http\Controllers\Controller {
         if ($validator->fails()) {
             return response()->json([
                 'message' => __('Invalid scope'),
-                'errors' => $validator->errors(),
+                'errors'  => $validator->errors(),
             ], 422);
         }
     }

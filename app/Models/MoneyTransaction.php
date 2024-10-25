@@ -9,18 +9,13 @@ class MoneyTransaction extends Model
 {
     use HasFactory;
 
-
     /**
-     * LIST OF CATEGORY ENUM THINGY
+     * LIST OF CATEGORY ENUM THINGY.
      *
      * UTILITIES
      * FOOD
      * ENTERTAINMENT
      * TRANSPORTATION
      * FAMILY
-     *
-     *
-     *
-     *
      */
 }

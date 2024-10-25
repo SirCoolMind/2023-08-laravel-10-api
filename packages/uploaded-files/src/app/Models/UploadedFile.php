@@ -32,46 +32,47 @@ class UploadedFile extends Model
     // TODO:: create a helper class for store/retrieve/delete
     public static function store($model = null, $type = null, $files = null)
     {
-        if(!$files || !$model) {
-            \Log::error("UploadedFile::store() || Files or model is missing");
+        if (!$files || !$model) {
+            \Log::error('UploadedFile::store() || Files or model is missing');
+
             return;
         }
 
-        if (! is_array($files)) {
-            $files = array($files);
+        if (!is_array($files)) {
+            $files = [$files];
         }
 
         foreach ($files as $file) {
             UploadedFile::handleFileUpload($model, $type, $file);
         }
-
     }
 
-    private static function handleFileUpload($model = null, $type = null, $file = null, )
+    private static function handleFileUpload($model = null, $type = null, $file = null)
     {
-        if(!$file) {
-            \Log::error("UploadedFile::handleFileUpload() || File is missing");
+        if (!$file) {
+            \Log::error('UploadedFile::handleFileUpload() || File is missing');
+
             return;
         }
 
-        if(!$model) {
-            \Log::error("UploadedFile::handleFileUpload() || Model is missing");
+        if (!$model) {
+            \Log::error('UploadedFile::handleFileUpload() || Model is missing');
+
             return;
         }
 
         try {
-
             \DB::beginTransaction();
 
             // Store the file inside server
             $modelType = get_class($model);
             $modelId = $model->id;
 
-            $pathName = $modelType."/".$modelId;
-            $encryptedName = \Str::random(40) . '.' . $file->getClientOriginalExtension();  // Encrypting filename
+            $pathName = $modelType.'/'.$modelId;
+            $encryptedName = \Str::random(40).'.'.$file->getClientOriginalExtension();  // Encrypting filename
             $filePath = $file->storeAs($pathName, $encryptedName, 'public');
 
-            $upload = new UploadedFile;
+            $upload = new UploadedFile();
 
             $upload->model_type = $modelType;
             $upload->model_id = $modelId;
@@ -86,12 +87,10 @@ class UploadedFile extends Model
             $upload->save();
 
             \DB::commit();
-
         } catch (\Throwable $th) {
             \DB::rollback();
-            \Log::error("UploadedFile::handleFileUpload() || error saving");
+            \Log::error('UploadedFile::handleFileUpload() || error saving');
             \Log::debug($th->getMessage());
         }
-
     }
 }
