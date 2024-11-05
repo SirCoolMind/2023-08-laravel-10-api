@@ -177,7 +177,7 @@ class KpopEraVersionController extends \App\Http\Controllers\Controller
         return array_merge($relations, $otherRelations);
     }
 
-    private function getValidator($request, $otherRules = [])
+    private function getValidator($request, $otherRules = [], $otherMessages = [])
     {
         $rules = [
             'name'        => ['required'],
