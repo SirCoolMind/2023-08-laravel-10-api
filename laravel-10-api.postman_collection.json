@@ -64,6 +64,24 @@
 				},
 				{
 					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the JSON response body\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Set the access_token in the environment variable if it exists\r",
+									"if (jsonData.data.token) {\r",
+									"    pm.environment.set(\"SANCTUM_TOKEN\", jsonData.data.token);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -83,12 +101,12 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "hafizruslan2@getnada.com",
+									"value": "{{admin_username}}",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "Test1234!",
+									"value": "{{admin_password}}",
 									"type": "text"
 								}
 							]
@@ -1154,12 +1172,16 @@
 										{
 											"key": "era_name",
 											"value": "Girls",
-											"type": "text"
+											"description": "not used anymore",
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "version_name",
 											"value": "US Exclusive Photobook",
-											"type": "text"
+											"description": "not used anymore",
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "kpop_era_id",
@@ -1226,13 +1248,58 @@
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"artist_name\" : \"Winter\",\r\n    \"era_name\" : \"Girls\",\r\n    \"version_name\" : \"US Exclusive Photobook\",\r\n    \"kpop_era_id\" : \"1\",\r\n    \"kpop_era_version_id\" : \"1\",\r\n    \"comment\" : \"test update\",\r\n    \"bought_price\" : \"10\",\r\n    \"bought_place\" : \"twitter\",\r\n    \"bought_comment\" : \"can't believe so cheap price\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "artist_name",
+											"value": "Winter",
+											"type": "text"
+										},
+										{
+											"key": "era_name",
+											"value": "Girls",
+											"description": "not used anymore",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "version_name",
+											"value": "US Exclusive Photobook",
+											"description": "not used anymore",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "kpop_era_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "kpop_era_version_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "comment",
+											"value": "test update",
+											"type": "text"
+										},
+										{
+											"key": "bought_price",
+											"value": "10",
+											"type": "text"
+										},
+										{
+											"key": "bought_place",
+											"value": "twitter",
+											"type": "text"
+										},
+										{
+											"key": "bought_comment",
+											"value": "can't believe so cheap price",
+											"type": "text"
 										}
-									}
+									]
 								},
 								"url": {
 									"raw": "{{domain}}/api/kpop/v1/admin/kpop-item/1",
@@ -1312,6 +1379,241 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Lookup",
+					"item": [
+						{
+							"name": "Kpop Eras",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/kpop/v1/lookup/kpop-eras",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"kpop",
+										"v1",
+										"lookup",
+										"kpop-eras"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Kpop Versions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/kpop/v1/lookup/kpop-versions?kpop_era_id=1",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"kpop",
+										"v1",
+										"lookup",
+										"kpop-versions"
+									],
+									"query": [
+										{
+											"key": "kpop_era_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Finance",
+			"item": [
+				{
+					"name": "Transaction",
+					"item": [
+						{
+							"name": "Retrieve all Transactions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/transaction",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"transaction"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrieve a Transaction",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/transaction/2",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"transaction",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Store Transaction",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"amount\" : \"20.10\",\r\n    \"transaction_date\" : \"2024-11-06T00:00:00+08:00\",\r\n    \"description\" : \"test test postman\",\r\n    \"category\" : \"Family\",\r\n    \"sub_category\" : \"FamilySub\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/transaction",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"transaction"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Transaction",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"DramaUpdated\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/transaction/2",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"transaction",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Transaction",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/transaction/1",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"transaction",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}
@@ -1344,23 +1646,6 @@
 					""
 				]
 			}
-		}
-	],
-	"variable": [
-		{
-			"key": "domain",
-			"value": "http://laravel-10-api.test",
-			"type": "string"
-		},
-		{
-			"key": "api_base_url",
-			"value": "http://laravel-10-api.test/api",
-			"type": "string"
-		},
-		{
-			"key": "SANCTUM_TOKEN",
-			"value": "3|laravel_sanctum_P1deSZ22HtN9A87BvejfpWWYhQ0B47OIJlhO63Va94ab490d",
-			"type": "string"
 		}
 	]
 }
