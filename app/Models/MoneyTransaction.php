@@ -10,6 +10,15 @@ class MoneyTransaction extends Model
     use HasFactory;
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'transaction_date' => 'datetime',
+    ];
+
+    /**
      * LIST OF CATEGORY ENUM THINGY.
      *
      * UTILITIES

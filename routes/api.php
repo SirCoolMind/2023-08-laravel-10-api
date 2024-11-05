@@ -33,4 +33,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::apiResource('/tasks', TaskController::class);
         Route::patch('/tasks/{task}/complete', CompleteTaskController::class);
     });
+
+    Route::prefix('finance')->group(function () {
+        Route::prefix('v1')->group(function () {
+            Route::apiResource('transaction', \App\Http\Controllers\Api\Finance\TransactionController::class);
+        });
+    });
 });
