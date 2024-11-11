@@ -16,6 +16,7 @@ class MoneyTransaction extends Model
      */
     protected $casts = [
         'transaction_date' => 'datetime',
+        'category' => \App\Enums\FinanceCategoryEnum::class,
     ];
 
     /**
