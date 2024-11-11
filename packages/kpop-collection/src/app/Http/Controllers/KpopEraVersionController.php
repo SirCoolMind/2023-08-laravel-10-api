@@ -81,7 +81,7 @@ class KpopEraVersionController extends \App\Http\Controllers\Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollback();
-            \Log::error($th->getMessage());
+            \Log::error($th);
 
             return response()->json([
                 'message' => __('Error saving record.'),
@@ -126,7 +126,7 @@ class KpopEraVersionController extends \App\Http\Controllers\Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollback();
-            \Log::error($th->getMessage());
+            \Log::error($th);
 
             return response()->json([
                 'message' => __('Error saving record.'),
