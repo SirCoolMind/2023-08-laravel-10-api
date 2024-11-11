@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace HafizRuslan\Finance\app\Models;
 
+use HafizRuslan\Finance\app\Enums\FinanceCategoryEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +17,7 @@ class MoneyTransaction extends Model
      */
     protected $casts = [
         'transaction_date' => 'datetime',
-        'category' => \App\Enums\FinanceCategoryEnum::class,
+        'category' => FinanceCategoryEnum::class,
     ];
 
     /**

@@ -28,6 +28,7 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "HafizRuslan\\KpopCollection\\": "packages/kpop-collection/src/",
+            "HafizRuslan\\Finance\\": "packages/finance/src/",
             "SirCoolMind\\UploadedFiles\\": "packages/uploaded-files/src/"
         }
     },

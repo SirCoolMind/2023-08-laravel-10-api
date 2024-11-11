@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums;
+namespace HafizRuslan\Finance\app\Enums;
 
 enum FinanceCategoryEnum: string
 {

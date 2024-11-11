@@ -160,6 +160,7 @@ return [
          * Package Service Providers...
          */
         \HafizRuslan\KpopCollection\KpopCollectionServiceProvider::class,
+        \HafizRuslan\Finance\FinanceServiceProvider::class,
         \SirCoolMind\UploadedFiles\UploadedFilesServiceProvider::class,
 
         /*

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\Finance;
+namespace HafizRuslan\Finance\app\Http\Controllers;
 
-use App\Http\Resources\MoneyTransactionResource;
-use App\Models\MoneyTransaction;
+use \HafizRuslan\Finance\app\Http\Resources\MoneyTransactionResource;
+use \HafizRuslan\Finance\app\Models\MoneyTransaction;
 use Illuminate\Http\Request;
 
 class TransactionController extends \App\Http\Controllers\Controller
@@ -77,7 +77,7 @@ class TransactionController extends \App\Http\Controllers\Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
-            \Log::error($th->getMessage());
+            \Log::error($th);
 
             return response()->json([
                 'message' => __('Error saving record.'),
@@ -126,7 +126,7 @@ class TransactionController extends \App\Http\Controllers\Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
-            \Log::error($th->getMessage());
+            \Log::error($th);
 
             return response()->json([
                 'message' => __('Error saving record.'),

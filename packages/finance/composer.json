@@ -1,0 +1,20 @@
+{
+    "name": "hafizruslan/finance",
+    "description": "Financial Tracker feature",
+    "type": "composer-plugin",
+    "license": "IMT",
+    "autoload": {
+        "psr-4": {
+            "HafizRuslan\\Finance": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Muhammad Hafiz Ruslan",
+            "email": "hafizcoolman@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "prefer-stable": true
+}
