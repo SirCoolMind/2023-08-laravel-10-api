@@ -26,13 +26,11 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 //Protected route
-Route::group(['middleware' => ['auth:sanctum']], function(){
-
+Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::prefix('v1')->group(function(){
+    Route::prefix('v1')->group(function () {
         Route::apiResource('/tasks', TaskController::class);
         Route::patch('/tasks/{task}/complete', CompleteTaskController::class);
     });
-
 });
