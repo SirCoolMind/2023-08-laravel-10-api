@@ -12,13 +12,12 @@ enum FinanceCategoryEnum: string
 
     public function description(): string
     {
-        return match($this)
-        {
-            self::UTILITIES => 'Bill related',
-            self::FOOD => 'Food ate by me',
-            self::ENTERTAINMENT => 'Fun things',
+        return match ($this) {
+            self::UTILITIES      => 'Bill related',
+            self::FOOD           => 'Food ate by me',
+            self::ENTERTAINMENT  => 'Fun things',
             self::TRANSPORTATION => 'Vroom vrroom!',
-            self::FAMILY => 'mom, dad, siblings cost',
+            self::FAMILY         => 'mom, dad, siblings cost',
         };
     }
 }

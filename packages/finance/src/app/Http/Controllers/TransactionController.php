@@ -2,8 +2,8 @@
 
 namespace HafizRuslan\Finance\app\Http\Controllers;
 
-use \HafizRuslan\Finance\app\Http\Resources\MoneyTransactionResource;
-use \HafizRuslan\Finance\app\Models\MoneyTransaction;
+use HafizRuslan\Finance\app\Http\Resources\MoneyTransactionResource;
+use HafizRuslan\Finance\app\Models\MoneyTransaction;
 use Illuminate\Http\Request;
 
 class TransactionController extends \App\Http\Controllers\Controller
@@ -184,11 +184,11 @@ class TransactionController extends \App\Http\Controllers\Controller
     private function getValidator($request, $otherRules = [], $otherMessages = [])
     {
         $rules = [
-            'amount' => ['required'],
+            'amount'           => ['required'],
             'transaction_date' => ['required', 'date'],
-            'description' => ['required'],
-            'category' => ['required'],
-            'sub_category' => ['required'],
+            'description'      => ['required'],
+            'category'         => ['required'],
+            'sub_category'     => ['required'],
         ];
         $rules = array_merge($rules, $otherRules);
 
