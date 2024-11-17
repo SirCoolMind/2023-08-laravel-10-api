@@ -4,6 +4,7 @@ namespace HafizRuslan\Finance\app\Http\Controllers;
 
 use HafizRuslan\Finance\app\Http\Resources\MoneyCategoryResource;
 use HafizRuslan\Finance\app\Models\MoneyCategory;
+use HafizRuslan\Finance\app\Models\MoneySubCategory;
 use Illuminate\Http\Request;
 
 class MoneyCategoryController extends \App\Http\Controllers\Controller
@@ -72,7 +73,7 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
             \DB::beginTransaction();
 
             $record = $this->setRecord($request, $record);
-            $this->setVersions($request, $record);
+            $this->setItems($request, $record);
             $record->load($this->withRelations());
 
             \DB::commit();
@@ -125,7 +126,7 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
             \DB::beginTransaction();
 
             $record = $this->setRecord($request, $record);
-            $this->setVersions($request, $record);
+            $this->setItems($request, $record);
             $record->load($this->withRelations());
 
             \DB::commit();
@@ -168,64 +169,43 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
         $originals = $record->getOriginal();
 
         $record->name = $request->input('name');
-        $record->project_id = 111111;
+        $record->description = $request->input('description');
+        $record->user_id = data_get($record, 'user_id', \Auth::user()?->id);;
         $record->save();
 
         return $record;
     }
 
-    private function setVersions($request, $record)
+    private function setItems($request, $record)
     {
-        $kpopEraId = $record->id;
+        $recordId = $record->id;
 
         // Get existing data and map them by ID
-        $existingData = KpopEraVersion::where('kpop_era_id', $kpopEraId)->get()->keyBy('id');
+        $existingData = MoneySubCategory::where('money_category_id', $recordId)->get()->keyBy('id');
         $existingIds = $existingData->pluck('id')->toArray();
 
         // Create or update versions based on ID presence
-        $incomingData = $request->input('versions', []);
+        $incomingData = $request->input('items', []);
         $incomingIds = array_filter(array_column($incomingData, 'id'));
-        foreach ($incomingData as $version) {
-            // Check if ID exists; if not, create a new Version instance
-            $itemRecord = empty($version['id']) ? new KpopEraVersion() : $existingData[$version['id']];
+        foreach ($incomingData as $item) {
+            // Check if ID exists; if not, create a new item instance
+            $itemRecord = empty($item['id']) ? new MoneySubCategory() : $existingData[$item['id']];
 
-            $itemRecord->name = $version['name'];
-            $itemRecord->kpop_era_id = $kpopEraId;
-            $itemRecord->project_id = $request->input('project_id');
+            $itemRecord->money_category_id = $recordId;
+            $itemRecord->name = data_get($item, 'name');
+            $itemRecord->description = data_get($item, 'description');
+            $itemRecord->user_id = data_get($item, 'user_id', \Auth::user()?->id);
             $itemRecord->save();
         }
 
         // Delete missing versions
         $toDelete = array_diff($existingIds, $incomingIds);
-        KpopEraVersion::whereIn('id', $toDelete)->delete();
-
-        // // Create new versions
-        // $toCreate = collect($incomingData)->filter(fn($v) => empty($v['id']));
-        // foreach ($toCreate as $version) {
-        //     $newVersion = new Version();
-        //     $newVersion->name = $version['name'];
-        //     $newVersion->kpop_era_id = $kpopEraId;
-        //     $newVersion->project_id = $request->input('project_id');
-        //     // Assign other properties if needed
-        //     $newVersion->save();
-        // }
-
-        // // Update existing versions
-        // $toUpdate = collect($incomingData)->filter(fn($v) => !empty($v['id']));
-        // foreach ($toUpdate as $version) {
-        //     $existingVersion = $existingVersions[$version['id']];
-        //     $originals = $existingVersion->getOriginal();  // Get original values
-
-        //     $existingVersion->name = $version['name'];
-        //     $existingVersion->project_id = $request->input('project_id');
-        //     // Update other fields as needed
-        //     $existingVersion->save();
-        // }
+        MoneySubCategory::whereIn('id', $toDelete)->delete();
     }
 
     private function withRelations($otherRelations = [])
     {
-        $relations = ['versions'];
+        $relations = ['subCategory'];
 
         return array_merge($relations, $otherRelations);
     }
@@ -233,9 +213,9 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
     private function getValidator($request, $otherRules = [], $otherMessages = [])
     {
         $rules = [
-            'name'            => ['required', 'unique:kpop_eras,name'],
-            'versions'        => ['array'],
-            'versions.*.name' => ['required', 'sometimes'],
+            'name'         => ['required', 'unique:money_categories,name'],
+            'items'        => ['array'],
+            'items.*.name' => ['required', 'sometimes'],
         ];
         $rules = array_merge($rules, $otherRules);
 
