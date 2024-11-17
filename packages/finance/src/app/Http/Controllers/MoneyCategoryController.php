@@ -2,8 +2,8 @@
 
 namespace HafizRuslan\Finance\app\Http\Controllers;
 
-use HafizRuslan\Finance\app\Models\MoneyCategory;
 use HafizRuslan\Finance\app\Http\Resources\MoneyCategoryResource;
+use HafizRuslan\Finance\app\Models\MoneyCategory;
 use Illuminate\Http\Request;
 
 class MoneyCategoryController extends \App\Http\Controllers\Controller

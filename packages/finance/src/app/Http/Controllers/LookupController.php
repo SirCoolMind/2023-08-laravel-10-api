@@ -2,17 +2,18 @@
 
 namespace HafizRuslan\Finance\app\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use HafizRuslan\Finance\app\Enums\FinanceCategoryEnum;
+use Illuminate\Http\Request;
 
 class LookupController extends \App\Http\Controllers\Controller
 {
     public $defaultProjectId = 111111;
 
-    public function clearCategoriesCache() {
+    public function clearCategoriesCache()
+    {
         \Cache::forget('categories');
         \Cache::forget('all_subcategories');
+
         return response()->json(['message' => 'Done']);
     }
 
@@ -20,7 +21,7 @@ class LookupController extends \App\Http\Controllers\Controller
     {
         // Cache the categories for 24 hours
         $categories = \Cache::remember('categories', 86400, function () {
-            return array_map(fn($category) => [
+            return array_map(fn ($category) => [
                 'id'   => $category->value,
                 'name' => $category->label(),
             ], FinanceCategoryEnum::cases());
@@ -54,6 +55,7 @@ class LookupController extends \App\Http\Controllers\Controller
             foreach (FinanceCategoryEnum::cases() as $category) {
                 $result = array_merge($result, $category->subcategories());
             }
+
             return $result;
         });
 
