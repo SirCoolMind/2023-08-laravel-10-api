@@ -1461,6 +1461,166 @@
 			"name": "Finance",
 			"item": [
 				{
+					"name": "Money Categories",
+					"item": [
+						{
+							"name": "Retrieve Categories",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/admin/money-category",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"admin",
+										"money-category"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrieve a Category",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/admin/money-category/7",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"admin",
+										"money-category",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Store Category and Sub",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Utilities\",\r\n    \"description\": \"Bill related\",\r\n    \"items\": [\r\n        {\r\n            \"id\": null,\r\n            \"name\": \"Monthly Bills\",\r\n            \"description\": \"Monthly billssss\"\r\n        },\r\n        {\r\n            \"id\": null,\r\n            \"name\": \"Electric Rent\",\r\n            \"description\": \"For rent room\"\r\n        },\r\n        {\r\n            \"id\": null,\r\n            \"name\": \"Electric Home\",\r\n            \"description\": \"For family home\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/admin/money-category",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"admin",
+										"money-category"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Category and Sub",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Utilities\",\r\n    \"description\": \"Bill related\",\r\n    \"items\": [\r\n        {\r\n            \"id\": 7,\r\n            \"name\": \"Monthly Bills\",\r\n            \"description\": \"Monthly billssss\"\r\n        },\r\n        {\r\n            \"id\": 8,\r\n            \"name\": \"Electric Rent\",\r\n            \"description\": \"For rent room\"\r\n        },\r\n        {\r\n            \"id\": 9,\r\n            \"name\": \"Electric Home\",\r\n            \"description\": \"For family home\"\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/admin/money-category/7",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"admin",
+										"money-category",
+										"7"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a Category",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/admin/money-category/6",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"admin",
+										"money-category",
+										"6"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Transaction",
 					"item": [
 						{
@@ -1527,13 +1687,34 @@
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"amount\" : \"20.10\",\r\n    \"transaction_date\" : \"2024-11-06T00:00:00+08:00\",\r\n    \"description\" : \"test test postman\",\r\n    \"category\" : \"Family\",\r\n    \"sub_category\" : \"FamilySub\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "amount",
+											"value": "20.10",
+											"type": "text"
+										},
+										{
+											"key": "transaction_date",
+											"value": "2024-11-06T00:00:00+08:00",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "test test postman",
+											"type": "text"
+										},
+										{
+											"key": "category",
+											"value": "FAMILY",
+											"type": "text"
+										},
+										{
+											"key": "sub_category",
+											"value": "FamilySub",
+											"type": "text"
 										}
-									}
+									]
 								},
 								"url": {
 									"raw": "{{domain}}/api/finance/v1/transaction",
@@ -1608,6 +1789,195 @@
 										"v1",
 										"transaction",
 										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Lookup",
+					"item": [
+						{
+							"name": "Clear Categories Cache",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/lookup/clear-categories-cache",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"lookup",
+										"clear-categories-cache"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Categories Enum",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/lookup/get-categories-enum",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"lookup",
+										"get-categories-enum"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Sub Categories Enum",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/lookup/get-sub-categories-enum?category=UTILITIES",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"lookup",
+										"get-sub-categories-enum"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "UTILITIES"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Categories",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/lookup/get-categories",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"lookup",
+										"get-categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Sub Categories",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/vnd.api+json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{domain}}/api/finance/v1/lookup/get-sub-categories?money_category_id=7",
+									"host": [
+										"{{domain}}"
+									],
+									"path": [
+										"api",
+										"finance",
+										"v1",
+										"lookup",
+										"get-sub-categories"
+									],
+									"query": [
+										{
+											"key": "money_category_id",
+											"value": "7"
+										}
 									]
 								}
 							},
