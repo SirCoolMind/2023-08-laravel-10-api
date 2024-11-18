@@ -6,7 +6,7 @@ use HafizRuslan\Finance\app\Http\Resources\MoneyTransactionResource;
 use HafizRuslan\Finance\app\Models\MoneyTransaction;
 use Illuminate\Http\Request;
 
-class TransactionController extends \App\Http\Controllers\Controller
+class MoneyTransactionController extends \App\Http\Controllers\Controller
 {
     public function index()
     {
