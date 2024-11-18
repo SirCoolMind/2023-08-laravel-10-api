@@ -170,7 +170,7 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
 
         $record->name = $request->input('name');
         $record->description = $request->input('description');
-        $record->user_id = data_get($record, 'user_id', \Auth::user()?->id);;
+        $record->user_id = data_get($record, 'user_id', \Auth::user()?->id);
         $record->save();
 
         return $record;
@@ -189,7 +189,7 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
         $incomingIds = array_filter(array_column($incomingData, 'id'));
         foreach ($incomingData as $item) {
             // Check if ID exists; if not, create a new item instance
-            $itemRecord = (empty($item['id']) || !isset($existingData[$item['id']]) ) ? new MoneySubCategory() : $existingData[$item['id']];
+            $itemRecord = (empty($item['id']) || !isset($existingData[$item['id']])) ? new MoneySubCategory() : $existingData[$item['id']];
 
             $itemRecord->money_category_id = $recordId;
             $itemRecord->name = data_get($item, 'name');
