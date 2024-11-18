@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagram version="1" name="ERD Tracker App.erd">
+	<entities>
+		<data-source id="mysql8-18a3032751a-7b90089b39ae1877">
+			<entity id="1" name="failed_jobs" fq-name="money_tracker.failed_jobs" order="6" x="1560" y="480">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="2" name="kpop_eras" fq-name="money_tracker.kpop_eras" order="7" x="60" y="320">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="3" name="kpop_eras_versions" fq-name="money_tracker.kpop_eras_versions" order="8" x="40" y="560">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="4" name="migrations" fq-name="money_tracker.migrations" order="9" x="1560" y="100">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="5" name="money_categories" fq-name="money_tracker.money_categories" order="10" x="60" y="860">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="6" name="money_subcategories" fq-name="money_tracker.money_subcategories" order="11" x="60" y="1140">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="7" name="money_transactions" fq-name="money_tracker.money_transactions" order="12" x="400" y="1060">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="8" name="password_reset_tokens" fq-name="money_tracker.password_reset_tokens" order="13" x="1720" y="400">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="9" name="personal_access_tokens" fq-name="money_tracker.personal_access_tokens" order="14" x="1720" y="100">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="10" name="tasks" fq-name="money_tracker.tasks" order="15" color-bg="192,192,192" x="60" y="60">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="11" name="uploaded_files" fq-name="money_tracker.uploaded_files" order="16" x="1560" y="780">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="12" name="users" fq-name="money_tracker.users" order="18" x="940" y="160">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="13" name="jobs" fq-name="money_tracker.jobs" order="17" x="1560" y="240">
+				<path name="money_tracker"/>
+			</entity>
+			<entity id="14" name="kpop_items" fq-name="money_tracker.kpop_items" order="19" x="300" y="360">
+				<path name="money_tracker"/>
+			</entity>
+		</data-source>
+	</entities>
+	<notes>
+		<note id="15" order="5" color-bg="252,239,126" x="1520" y="60" w="420" h="640">Laravel Default </note>
+		<note id="16" order="4" color-bg="0,255,255" x="20" y="20" w="220" h="220">Practice Module</note>
+		<note id="17" order="2" color-bg="0,255,255" x="20" y="280" w="496" h="481">KPOP Collection Module</note>
+		<note id="18" order="3" color-bg="255,255,138" x="900" y="120" w="240" h="300">Laravel Default Main</note>
+		<note id="19" order="1" x="1520" y="740" w="240" h="380"> Uploaded File Package</note>
+		<note id="20" order="0" color-bg="128,255,0" x="20" y="820" w="641" h="621"> Finance Module</note>
+	</notes>
+	<relations>
+		<relation name="vfk_kpop_eras_versions_kpop_eras" type="vfk" pk-ref="2" fk-ref="3"/>
+		<relation name="vfk_kpop_items_kpop_eras" type="vfk" pk-ref="2" fk-ref="14"/>
+		<relation name="vfk_kpop_items_kpop_eras_versions" type="vfk" pk-ref="3" fk-ref="14"/>
+		<relation name="vfk_money_subcategories_money_categories" type="vfk" pk-ref="5" fk-ref="6"/>
+		<relation name="vfk_money_categories_users" type="vfk" pk-ref="12" fk-ref="5"/>
+		<relation name="vfk_money_subcategories_users" type="vfk" pk-ref="12" fk-ref="6">
+			<bend type="abs" x="527" y="753"/>
+			<bend type="abs" x="927" y="227"/>
+		</relation>
+	</relations>
+</diagram>
