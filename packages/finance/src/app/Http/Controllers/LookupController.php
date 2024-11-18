@@ -70,8 +70,8 @@ class LookupController extends \App\Http\Controllers\Controller
             return MoneyCategory::query()
                 ->select('id', 'name')
                 ->get()
-                ->map(fn($category) => [
-                    'id' => $category->id,
+                ->map(fn ($category) => [
+                    'id'   => $category->id,
                     'name' => $category->name,
                 ])->toArray();
         });
@@ -87,7 +87,6 @@ class LookupController extends \App\Http\Controllers\Controller
             $cacheKey = "subcategories_{$moneyCategoryId}";
 
             $subcategories = \Cache::remember($cacheKey, 86400, function () use ($moneyCategoryId) {
-
                 $category = MoneyCategory::find($moneyCategoryId);
                 if (!$category) {
                     return response()->json(['error' => 'Invalid category'], 400);
@@ -96,8 +95,8 @@ class LookupController extends \App\Http\Controllers\Controller
                 return $category->subCategory()
                     ->select('id', 'name')
                     ->get()
-                    ->map(fn($subCategory) => [
-                        'id' => $subCategory->id,
+                    ->map(fn ($subCategory) => [
+                        'id'   => $subCategory->id,
                         'name' => $subCategory->name,
                     ])->toArray();
             });
@@ -110,12 +109,13 @@ class LookupController extends \App\Http\Controllers\Controller
             $result = [];
             $categories = MoneyCategory::get();
             foreach ($categories as $category) {
-                $result = array_merge($result,
+                $result = array_merge(
+                    $result,
                     $category->subCategory()
                         ->select('id', 'name')
                         ->get()
-                        ->map(fn($subCategory) => [
-                            'id' => $subCategory->id,
+                        ->map(fn ($subCategory) => [
+                            'id'   => $subCategory->id,
                             'name' => $subCategory->name,
                         ])->toArray()
                 );
@@ -126,7 +126,6 @@ class LookupController extends \App\Http\Controllers\Controller
 
         return response()->json(['data' => $allSubCategories]);
     }
-
 
     private function validateScope()
     {
