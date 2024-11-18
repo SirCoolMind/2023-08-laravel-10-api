@@ -1239,7 +1239,7 @@
 						{
 							"name": "Update Item",
 							"request": {
-								"method": "PUT",
+								"method": "POST",
 								"header": [
 									{
 										"key": "Accept",
@@ -1297,6 +1297,11 @@
 										{
 											"key": "bought_comment",
 											"value": "can't believe so cheap price",
+											"type": "text"
+										},
+										{
+											"key": "_method",
+											"value": "PUT",
 											"type": "text"
 										}
 									]
@@ -1707,11 +1712,23 @@
 										{
 											"key": "category",
 											"value": "FAMILY",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "sub_category",
 											"value": "FamilySub",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "money_category[id]",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "money_subcategory[id]",
+											"value": "1",
 											"type": "text"
 										}
 									]
@@ -1734,7 +1751,7 @@
 						{
 							"name": "Update Transaction",
 							"request": {
-								"method": "PUT",
+								"method": "POST",
 								"header": [
 									{
 										"key": "Accept",
@@ -1743,13 +1760,51 @@
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"DramaUpdated\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "amount",
+											"value": "20.10",
+											"type": "text"
+										},
+										{
+											"key": "transaction_date",
+											"value": "2024-11-06T00:00:00+08:00",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "test test postman",
+											"type": "text"
+										},
+										{
+											"key": "category",
+											"value": "FAMILY",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "sub_category",
+											"value": "FamilySub",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "money_category[id]",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "money_subcategory[id]",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "_method",
+											"value": "PUT",
+											"type": "text"
 										}
-									}
+									]
 								},
 								"url": {
 									"raw": "{{domain}}/api/finance/v1/transaction/2",
