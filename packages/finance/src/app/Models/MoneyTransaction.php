@@ -20,7 +20,6 @@ class MoneyTransaction extends Model
         // 'category'         => FinanceCategoryEnum::class,
     ];
 
-
     public function moneyCategory()
     {
         return $this->hasOne(MoneyCategory::class, 'id', 'money_category_id');
@@ -30,7 +29,6 @@ class MoneyTransaction extends Model
     {
         return $this->hasOne(MoneySubCategory::class, 'id', 'money_subcategory_id');
     }
-
 
     /**
      * LIST OF CATEGORY ENUM THINGY.
