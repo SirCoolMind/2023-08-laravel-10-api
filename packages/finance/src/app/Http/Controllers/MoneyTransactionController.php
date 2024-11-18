@@ -165,8 +165,10 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         $record->amount = $request->input('amount');
         $record->transaction_date = $request->input('transaction_date');
         $record->description = $request->input('description');
-        $record->category = $request->input('category');
-        $record->sub_category = $request->input('sub_category');
+        // $record->category = $request->input('category');
+        // $record->sub_category = $request->input('sub_category');
+        $record->money_category_id = $request->input('money_category.id');
+        $record->money_subcategory_id = $request->input('money_subcategory.id');
 
         // TODO : should have user_id tied to money transaction
         $record->save();
@@ -176,7 +178,10 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
 
     private function withRelations($otherRelations = [])
     {
-        $relations = [];
+        $relations = [
+            'moneyCategory',
+            'moneySubCategory',
+        ];
 
         return array_merge($relations, $otherRelations);
     }
@@ -187,8 +192,10 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
             'amount'           => ['required'],
             'transaction_date' => ['required', 'date'],
             'description'      => ['required'],
-            'category'         => ['required'],
-            'sub_category'     => ['required'],
+            // 'category'         => ['required'],
+            // 'sub_category'     => ['required'],
+            'money_category.id'    => ['required'],
+            'money_subcategory.id' => ['required'],
         ];
         $rules = array_merge($rules, $otherRules);
 
