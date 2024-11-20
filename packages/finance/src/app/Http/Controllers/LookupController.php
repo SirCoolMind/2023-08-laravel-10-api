@@ -73,6 +73,7 @@ class LookupController extends \App\Http\Controllers\Controller
                 ->map(fn ($category) => [
                     'id'   => $category->id,
                     'name' => $category->name,
+                    'description' => $category->description,
                 ])->toArray();
         });
 
@@ -98,6 +99,7 @@ class LookupController extends \App\Http\Controllers\Controller
                     ->map(fn ($subCategory) => [
                         'id'   => $subCategory->id,
                         'name' => $subCategory->name,
+                        'description' => $subCategory->description,
                     ])->toArray();
             });
 
@@ -117,6 +119,7 @@ class LookupController extends \App\Http\Controllers\Controller
                         ->map(fn ($subCategory) => [
                             'id'   => $subCategory->id,
                             'name' => $subCategory->name,
+                            'description' => $subCategory->description,
                         ])->toArray()
                 );
             }
