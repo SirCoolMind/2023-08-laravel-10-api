@@ -68,7 +68,6 @@ class LookupController extends \App\Http\Controllers\Controller
         // Cache the categories for 24 hours
         $categories = \Cache::remember('categories', 86400, function () {
             return MoneyCategory::query()
-                ->select('id', 'name')
                 ->get()
                 ->map(fn ($category) => [
                     'id'   => $category->id,
@@ -94,7 +93,6 @@ class LookupController extends \App\Http\Controllers\Controller
                 }
 
                 return $category->subCategory()
-                    ->select('id', 'name')
                     ->get()
                     ->map(fn ($subCategory) => [
                         'id'   => $subCategory->id,
@@ -114,7 +112,6 @@ class LookupController extends \App\Http\Controllers\Controller
                 $result = array_merge(
                     $result,
                     $category->subCategory()
-                        ->select('id', 'name')
                         ->get()
                         ->map(fn ($subCategory) => [
                             'id'   => $subCategory->id,
