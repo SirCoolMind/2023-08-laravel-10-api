@@ -15,5 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Task::factory(10)->create();
+        $this->call(MoneyCategoriesTableSeeder::class);
+        $this->call(MoneySubcategoriesTableSeeder::class);
     }
 }
