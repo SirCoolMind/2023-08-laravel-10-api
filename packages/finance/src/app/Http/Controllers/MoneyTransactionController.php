@@ -16,13 +16,15 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
 
         // * sort
         $sortBy = '';
-        switch (request()->input('sort_by')) {
+        switch (request()->input('sort_by.0.key')) {
+            case 'date':
+                $sortBy = 'transaction_date';
+                break;
             default:
                 $sortBy = 'id';
-                break;
         }
 
-        $descending = request()->input('descending') == 'true' ? 'DESC' : 'ASC';
+        $descending = request()->input('sort_by.0.order') == 'desc' ? 'DESC' : 'ASC';
         $search = request()->input('filter.search');
 
         // $projectData = \App\Models\Project::find(request()->input('project_id'));
