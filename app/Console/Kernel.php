@@ -18,14 +18,14 @@ class Kernel extends ConsoleKernel
                 \Log::error("Command backup:run failed at ".\Carbon\Carbon::now()->toDateTimeString());
             })
             ->onSuccess(function () {
-                \Log::error("Command backup:run success at ".\Carbon\Carbon::now()->toDateTimeString());
+                \Log::info("Command backup:run success at ".\Carbon\Carbon::now()->toDateTimeString());
             });
         $schedule->command('backup:clean')->daily()->at('01:30')
             ->onFailure(function () {
                 \Log::error("Command backup:clean failed at ".\Carbon\Carbon::now()->toDateTimeString());
             })
             ->onSuccess(function () {
-                \Log::error("Command backup:clean success at ".\Carbon\Carbon::now()->toDateTimeString());
+                \Log::info("Command backup:clean success at ".\Carbon\Carbon::now()->toDateTimeString());
             });
     }
 
