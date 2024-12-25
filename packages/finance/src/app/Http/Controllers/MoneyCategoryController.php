@@ -185,7 +185,7 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
         $existingIds = $existingData->pluck('id')->toArray();
 
         // Create or update versions based on ID presence
-        $incomingData = $request->input('items', []);
+        $incomingData = $request->input('sub_categories', []);
         $incomingIds = array_filter(array_column($incomingData, 'id'));
         foreach ($incomingData as $item) {
             // Check if ID exists; if not, create a new item instance
@@ -214,8 +214,8 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
     {
         $rules = [
             'name'         => ['required', 'unique:money_categories,name'],
-            'items'        => ['array'],
-            'items.*.name' => ['required', 'sometimes'],
+            'sub_categories'        => ['array'],
+            'sub_categories.*.name' => ['required', 'sometimes'],
         ];
         $rules = array_merge($rules, $otherRules);
 
