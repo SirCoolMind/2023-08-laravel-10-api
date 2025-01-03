@@ -2,7 +2,7 @@
 
 namespace HafizRuslan\Finance\app\Models;
 
-use HafizRuslan\Finance\app\Enums\FinanceCategoryEnum;
+use HafizRuslan\Finance\app\Enums\FinanceTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,7 +17,7 @@ class MoneyTransaction extends Model
      */
     protected $casts = [
         'transaction_date' => 'datetime',
-        // 'category'         => FinanceCategoryEnum::class,
+        'type' => FinanceTypeEnum::class,
     ];
 
     public function moneyCategory()

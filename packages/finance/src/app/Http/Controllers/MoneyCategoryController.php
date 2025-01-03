@@ -2,10 +2,12 @@
 
 namespace HafizRuslan\Finance\app\Http\Controllers;
 
+use HafizRuslan\Finance\app\Enums\FinanceTypeEnum;
 use HafizRuslan\Finance\app\Http\Resources\MoneyCategoryResource;
 use HafizRuslan\Finance\app\Models\MoneyCategory;
 use HafizRuslan\Finance\app\Models\MoneySubCategory;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Enum;
 
 class MoneyCategoryController extends \App\Http\Controllers\Controller
 {
@@ -213,9 +215,10 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
     private function getValidator($request, $otherRules = [], $otherMessages = [])
     {
         $rules = [
-            'name'         => ['required', 'unique:money_categories,name'],
+            'name'                  => ['required', 'unique:money_categories,name'],
             'sub_categories'        => ['array'],
             'sub_categories.*.name' => ['required', 'sometimes'],
+            'type'                  => ['required', new Enum(FinanceTypeEnum::class)]
         ];
         $rules = array_merge($rules, $otherRules);
 
