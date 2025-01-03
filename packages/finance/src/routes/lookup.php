@@ -14,4 +14,5 @@ Route::group(['prefix' => 'lookup'], function () {
     Route::get('get-sub-categories-enum', [LookupController::class, 'getSubCategoriesEnum']);
     Route::get('get-categories', [LookupController::class, 'getCategories']);
     Route::get('get-sub-categories', [LookupController::class, 'getSubCategories']);
+    Route::get('get-finance-type-enum', [LookupController::class, 'getFinanceTypeEnums']);
 });

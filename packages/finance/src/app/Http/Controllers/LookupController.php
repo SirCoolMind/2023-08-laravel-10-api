@@ -3,6 +3,7 @@
 namespace HafizRuslan\Finance\app\Http\Controllers;
 
 use HafizRuslan\Finance\app\Enums\FinanceCategoryEnum;
+use HafizRuslan\Finance\app\Enums\FinanceTypeEnum;
 use HafizRuslan\Finance\app\Models\MoneyCategory;
 use Illuminate\Http\Request;
 
@@ -125,6 +126,19 @@ class LookupController extends \App\Http\Controllers\Controller
         });
 
         return response()->json(['data' => $allSubCategories]);
+    }
+
+    public function getFinanceTypeEnums()
+    {
+        // Cache the categories for 24 hours
+        $categories = \Cache::remember('finance_type_enums', 86400, function () {
+            return array_map(fn ($category) => [
+                'id'   => $category->value,
+                'name' => $category->label(),
+            ], FinanceTypeEnum::cases());
+        });
+
+        return response()->json(['data' => $categories]);
     }
 
     private function validateScope()
