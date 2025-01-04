@@ -7,6 +7,7 @@ Route::group(['prefix' => 'lookup'], function () {
     // Protected route
     Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('clear-categories-cache', [LookupController::class, 'clearCategoriesCache']);
+        Route::get('get-accounts', [LookupController::class, 'getAccounts']);
     });
 
     // Public route

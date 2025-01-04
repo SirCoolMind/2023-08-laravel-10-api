@@ -4,6 +4,7 @@ namespace HafizRuslan\Finance\app\Http\Controllers;
 
 use HafizRuslan\Finance\app\Enums\FinanceCategoryEnum;
 use HafizRuslan\Finance\app\Enums\FinanceTypeEnum;
+use HafizRuslan\Finance\app\Models\MoneyAccount;
 use HafizRuslan\Finance\app\Models\MoneyCategory;
 use Illuminate\Http\Request;
 
@@ -139,6 +140,23 @@ class LookupController extends \App\Http\Controllers\Controller
         });
 
         return response()->json(['data' => $categories]);
+    }
+
+    public function getAccounts()
+    {
+        // Cache money_accounts for 24 hours
+        $accounts = \Cache::remember('money_accounts', 86400, function () {
+            return MoneyAccount::query()
+                ->where('user_id', \Auth::user()->id )
+                ->get()
+                ->map(fn ($account) => [
+                    'id'   => $account->id, 
+                    'name' => $account->name,
+                    'description' => $account->description,
+                ])->toArray();
+        });
+
+        return response()->json(['data' => $accounts]);
     }
 
     private function validateScope()
