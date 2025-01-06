@@ -2,12 +2,9 @@
 
 namespace HafizRuslan\Finance\app\Http\Controllers;
 
-use HafizRuslan\Finance\app\Enums\FinanceTypeEnum;
 use HafizRuslan\Finance\app\Http\Resources\MoneyAccountResource;
 use HafizRuslan\Finance\app\Models\MoneyAccount;
-use HafizRuslan\Finance\app\Models\MoneyCategory;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Enum;
 
 class MoneyAccountController extends \App\Http\Controllers\Controller
 {
@@ -69,7 +66,7 @@ class MoneyAccountController extends \App\Http\Controllers\Controller
             ], 500);
         }
 
-        $record = new MoneyCategory();
+        $record = new MoneyAccount;
 
         try {
             \DB::beginTransaction();
