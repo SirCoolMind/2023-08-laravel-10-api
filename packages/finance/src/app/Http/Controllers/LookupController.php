@@ -72,8 +72,8 @@ class LookupController extends \App\Http\Controllers\Controller
             return MoneyCategory::query()
                 ->get()
                 ->map(fn ($category) => [
-                    'id'   => $category->id,
-                    'name' => $category->name,
+                    'id'          => $category->id,
+                    'name'        => $category->name,
                     'description' => $category->description,
                 ])->toArray();
         });
@@ -97,8 +97,8 @@ class LookupController extends \App\Http\Controllers\Controller
                 return $category->subCategory()
                     ->get()
                     ->map(fn ($subCategory) => [
-                        'id'   => $subCategory->id,
-                        'name' => $subCategory->name,
+                        'id'          => $subCategory->id,
+                        'name'        => $subCategory->name,
                         'description' => $subCategory->description,
                     ])->toArray();
             });
@@ -116,8 +116,8 @@ class LookupController extends \App\Http\Controllers\Controller
                     $category->subCategory()
                         ->get()
                         ->map(fn ($subCategory) => [
-                            'id'   => $subCategory->id,
-                            'name' => $subCategory->name,
+                            'id'          => $subCategory->id,
+                            'name'        => $subCategory->name,
                             'description' => $subCategory->description,
                         ])->toArray()
                 );
@@ -147,11 +147,11 @@ class LookupController extends \App\Http\Controllers\Controller
         // Cache money_accounts for 24 hours
         $accounts = \Cache::remember('money_accounts', 86400, function () {
             return MoneyAccount::query()
-                ->where('user_id', \Auth::user()->id )
+                ->where('user_id', \Auth::user()->id)
                 ->get()
                 ->map(fn ($account) => [
-                    'id'   => $account->id, 
-                    'name' => $account->name,
+                    'id'          => $account->id,
+                    'name'        => $account->name,
                     'description' => $account->description,
                 ])->toArray();
         });

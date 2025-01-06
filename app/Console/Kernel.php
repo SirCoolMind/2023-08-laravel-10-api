@@ -15,17 +15,17 @@ class Kernel extends ConsoleKernel
         $schedule->command('sanctum:prune-expired --hours=24')->daily();
         $schedule->command('backup:run --only-db')->daily()->at('01:00')
             ->onFailure(function () {
-                \Log::error("Command backup:run failed at ".\Carbon\Carbon::now()->toDateTimeString());
+                \Log::error('Command backup:run failed at '.\Carbon\Carbon::now()->toDateTimeString());
             })
             ->onSuccess(function () {
-                \Log::info("Command backup:run success at ".\Carbon\Carbon::now()->toDateTimeString());
+                \Log::info('Command backup:run success at '.\Carbon\Carbon::now()->toDateTimeString());
             });
         $schedule->command('backup:clean')->daily()->at('01:30')
             ->onFailure(function () {
-                \Log::error("Command backup:clean failed at ".\Carbon\Carbon::now()->toDateTimeString());
+                \Log::error('Command backup:clean failed at '.\Carbon\Carbon::now()->toDateTimeString());
             })
             ->onSuccess(function () {
-                \Log::info("Command backup:clean success at ".\Carbon\Carbon::now()->toDateTimeString());
+                \Log::info('Command backup:clean success at '.\Carbon\Carbon::now()->toDateTimeString());
             });
     }
 
