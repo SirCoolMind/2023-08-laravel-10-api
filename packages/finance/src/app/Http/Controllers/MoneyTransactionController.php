@@ -200,7 +200,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
             // 'sub_category'     => ['required'],
             'money_category.id'    => ['required'],
             'money_subcategory.id' => ['required'],
-            'type'                 => ['required', new Enum(FinanceTypeEnum::class)]
+            'type'                 => ['required', new Enum(FinanceTypeEnum::class)],
         ];
         $rules = array_merge($rules, $otherRules);
 

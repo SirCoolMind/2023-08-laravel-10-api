@@ -218,7 +218,7 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
             'name'                  => ['required', 'unique:money_categories,name'],
             'sub_categories'        => ['array'],
             'sub_categories.*.name' => ['required', 'sometimes'],
-            'type'                  => ['required', new Enum(FinanceTypeEnum::class)]
+            'type'                  => ['required', new Enum(FinanceTypeEnum::class)],
         ];
         $rules = array_merge($rules, $otherRules);
 

@@ -66,7 +66,7 @@ class MoneyAccountController extends \App\Http\Controllers\Controller
             ], 500);
         }
 
-        $record = new MoneyAccount;
+        $record = new MoneyAccount();
 
         try {
             \DB::beginTransaction();
