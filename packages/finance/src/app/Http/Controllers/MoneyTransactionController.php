@@ -173,6 +173,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         // $record->sub_category = $request->input('sub_category');
         $record->money_category_id = $request->input('money_category.id');
         $record->money_subcategory_id = $request->input('money_subcategory.id');
+        $record->type = $request->input('type.id');
 
         // TODO : should have user_id tied to money transaction
         $record->save();
@@ -200,7 +201,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
             // 'sub_category'     => ['required'],
             'money_category.id'    => ['required'],
             'money_subcategory.id' => ['required'],
-            'type'                 => ['required', new Enum(FinanceTypeEnum::class)],
+            'type.id'                 => ['required', new Enum(FinanceTypeEnum::class)],
         ];
         $rules = array_merge($rules, $otherRules);
 
