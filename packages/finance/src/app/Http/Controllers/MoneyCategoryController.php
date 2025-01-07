@@ -172,6 +172,7 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
 
         $record->name = $request->input('name');
         $record->description = $request->input('description');
+        $record->type = $request->input('type.id');
         $record->user_id = data_get($record, 'user_id', \Auth::user()?->id);
         $record->save();
 
@@ -218,7 +219,7 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
             'name'                  => ['required', 'unique:money_categories,name'],
             'sub_categories'        => ['array'],
             'sub_categories.*.name' => ['required', 'sometimes'],
-            'type'                  => ['required', new Enum(FinanceTypeEnum::class)],
+            'type.id'               => ['required', new Enum(FinanceTypeEnum::class)],
         ];
         $rules = array_merge($rules, $otherRules);
 

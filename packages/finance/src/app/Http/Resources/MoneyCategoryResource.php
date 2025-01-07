@@ -16,6 +16,10 @@ class MoneyCategoryResource extends JsonResource
             'id'             => $this->id,
             'name'           => $this->name,
             'description'    => $this->description,
+            'type' => [
+                'id' => $this->type?->value,
+                'name' => $this->type?->label(),
+            ],
             'sub_categories' => MoneySubCategoryResource::collection($this->whenLoaded('subCategory')),
             'user_id'        => $this->user_id,
             'created_at'     => $this->created_at,
