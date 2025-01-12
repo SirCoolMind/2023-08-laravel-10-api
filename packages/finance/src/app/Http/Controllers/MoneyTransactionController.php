@@ -29,11 +29,20 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         $descending = request()->input('sort_by.0.order') == 'desc' ? 'DESC' : 'ASC';
         $search = request()->input('filter.search');
 
+        $startDate = request()->input('filter.start_date');
+        $endDate = request()->input('filter.end_date');
         // $projectData = \App\Models\Project::find(request()->input('project_id'));
 
         // * fetch
         $records = MoneyTransaction::with($this->withRelations())
             ->orderBy($sortBy, $descending)
+            ->when($startDate, function($query) use($startDate) {
+
+                $query->where('transaction_date', '>=' , \Carbon\Carbon::parse($startDate)->startOfDay());
+            })
+            ->when($endDate, function($query) use($endDate) {
+                $query->where('transaction_date', '<=' ,\Carbon\Carbon::parse($endDate)->endOfDay());
+            })
             ->paginate(request()->input('rows_per_page'));
 
         return MoneyTransactionResource::collection($records);
