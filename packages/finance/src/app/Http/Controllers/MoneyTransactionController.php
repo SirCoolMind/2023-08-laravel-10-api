@@ -111,7 +111,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         }
 
         $rules = [
-            'name' => 'required|unique:kpop_eras,name,'.$id,
+            // 'name' => 'required|unique:kpop_eras,name,'.$id,
         ];
 
         $validator = $this->getValidator($request, $rules);
