@@ -20,6 +20,13 @@ class MoneyTransaction extends Model
         'type'             => FinanceTypeEnum::class,
     ];
 
+    // Accessor for transaction_date
+    public function getTransactionDateAttribute($value)
+    {
+        // Convert to UTC and then to ISO 8601 format
+        return \Carbon\Carbon::parse($value)->utc()->toISOString();  // 'Z' will be appended
+    }
+
     public function moneyCategory()
     {
         return $this->hasOne(MoneyCategory::class, 'id', 'money_category_id');

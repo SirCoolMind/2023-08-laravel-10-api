@@ -17,7 +17,7 @@ class MoneyTransactionResource extends JsonResource
         return [
             'id'                => $this->id,
             'amount'            => $this->amount,
-            'transaction_date'  => $this->transaction_date?->toIso8601String(),
+            'transaction_date'  => $this->transaction_date,
             'description'       => $this->description,
             'category'          => $this->category,
             'sub_category'      => $this->sub_category,
