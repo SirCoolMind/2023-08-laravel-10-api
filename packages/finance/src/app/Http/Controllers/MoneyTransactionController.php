@@ -48,6 +48,39 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         return MoneyTransactionResource::collection($records);
     }
 
+    public function indexV2()
+    {
+        if ($return = $this->validateScope()) {
+            return $return;
+        }
+
+        // * sort
+        $sortBy = 'transaction_date';
+        $descending = 'DESC';
+        $search = request()->input('filter.search');
+
+        $startDate = request()->input('filter.start_date');
+        $endDate = request()->input('filter.end_date');
+        if(!$startDate) {
+            $startDate = \Carbon\Carbon::now()->startOfMonth();
+            $endDate = $startDate->clone()->endOfMonth();
+        }
+
+        // * fetch
+        $records = MoneyTransaction::with($this->withRelations())
+            ->orderBy($sortBy, $descending)
+            ->when($startDate, function($query) use($startDate) {
+
+                $query->where('transaction_date', '>=' , \Carbon\Carbon::parse($startDate)->startOfDay());
+            })
+            ->when($endDate, function($query) use($endDate) {
+                $query->where('transaction_date', '<=' ,\Carbon\Carbon::parse($endDate)->endOfDay());
+            })
+            ->get();
+
+        return MoneyTransactionResource::collection($records);
+    }
+
     public function show($id)
     {
         if ($return = $this->validateScope()) {
