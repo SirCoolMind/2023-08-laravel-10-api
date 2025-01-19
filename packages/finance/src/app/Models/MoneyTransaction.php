@@ -27,6 +27,14 @@ class MoneyTransaction extends Model
         return \Carbon\Carbon::parse($value)->utc()->toISOString();  // 'Z' will be appended
     }
 
+    // Method for date in Y-m-d
+    public function getTransactionDateInYmd()
+    {
+        return \Carbon\Carbon::parse($this->attributes['transaction_date'])
+            ->utc()
+            ->format('Y-m-d');
+    }
+
     public function moneyCategory()
     {
         return $this->hasOne(MoneyCategory::class, 'id', 'money_category_id');
