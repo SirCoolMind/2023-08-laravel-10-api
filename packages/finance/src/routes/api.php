@@ -16,10 +16,3 @@ Route::group(['prefix' => 'api/finance/v1'], function () {
     // Public
     Route::group([], base_path('packages/finance/src/routes/lookup.php'));
 });
-
-Route::group(['prefix' => 'api/finance/v2'], function () {
-    // Admin
-    Route::group(['middleware' => ['auth:sanctum']], function () {
-        Route::get('transaction', [MoneyTransactionController::class, 'indexV2']);
-    });
-});

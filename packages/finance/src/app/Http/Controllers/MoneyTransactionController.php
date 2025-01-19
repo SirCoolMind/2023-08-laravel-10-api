@@ -48,55 +48,6 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         return MoneyTransactionResource::collection($records);
     }
 
-    public function indexV2()
-    {
-        if ($return = $this->validateScope()) {
-            return $return;
-        }
-
-        // * sort
-        $sortBy = '';
-        switch (request()->input('sort_by.0.key')) {
-            case 'date':
-                $sortBy = 'transaction_date';
-                break;
-            default:
-                $sortBy = 'id';
-        }
-
-        $descending = request()->input('sort_by.0.order') == 'desc' ? 'DESC' : 'ASC';
-        $search = request()->input('filter.search');
-
-        $startDate = request()->input('filter.start_date');
-        $endDate = request()->input('filter.end_date');
-
-        $transactions = MoneyTransaction::with($this->withRelations())
-            ->orderBy($sortBy, $descending)
-            ->when($startDate, function($query) use($startDate) {
-                $query->where('transaction_date', '>=' , \Carbon\Carbon::parse($startDate)->startOfDay());
-            })
-            ->when($endDate, function($query) use($endDate) {
-                $query->where('transaction_date', '<=' ,\Carbon\Carbon::parse($endDate)->endOfDay());
-            })
-            ->select('id', 'transaction_date', 'amount', 'description')
-            ->get();
-
-        $grouped = $transactions->groupBy(function ($transaction) {
-            return \Carbon\Carbon::parse($transaction->transaction_date)->format('Y-m-d');
-        });
-
-        // Optionally change the structure
-        $result = $grouped->map(function ($transactions, $date) {
-            return [
-                'date' => $date,
-                'date_day' => \Carbon\Carbon::parse($date)->dayName,
-                'transactions' => $transactions,
-            ];
-        });
-
-        return response()->json($result);
-    }
-
     public function show($id)
     {
         if ($return = $this->validateScope()) {
