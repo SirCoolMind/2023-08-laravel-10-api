@@ -45,6 +45,11 @@ class MoneyTransaction extends Model
         return $this->hasOne(MoneySubCategory::class, 'id', 'money_subcategory_id');
     }
 
+    public function moneyAccount()
+    {
+        return $this->hasOne(MoneyAccount::class, 'id', 'money_account_id');
+    }
+
     /**
      * LIST OF CATEGORY ENUM THINGY.
      *

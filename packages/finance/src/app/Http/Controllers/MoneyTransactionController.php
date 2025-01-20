@@ -215,6 +215,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         // $record->sub_category = $request->input('sub_category');
         $record->money_category_id = $request->input('money_category.id');
         $record->money_subcategory_id = $request->input('money_subcategory.id');
+        $record->money_account_id = $request->input('money_account.id');
         $record->type = $request->input('type.id');
 
         // TODO : should have user_id tied to money transaction
@@ -228,6 +229,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         $relations = [
             'moneyCategory',
             'moneySubCategory',
+            'moneyAccount',
         ];
 
         return array_merge($relations, $otherRelations);
