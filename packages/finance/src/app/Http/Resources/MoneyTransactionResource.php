@@ -24,6 +24,7 @@ class MoneyTransactionResource extends JsonResource
             'sub_category'      => $this->sub_category,
             'money_category'    => new MoneyCategoryResource($this->whenLoaded('moneyCategory')),
             'money_subcategory' => new MoneySubCategoryResource($this->whenLoaded('moneySubCategory')),
+            'money_account'     => new MoneyAccountResource($this->whenLoaded('moneyAccount')),
             'type'              => [
                 'id'   => $this->type?->value,
                 'name' => $this->type?->label(),
