@@ -78,7 +78,24 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
             })
             ->get();
 
-        return MoneyTransactionResource::collection($records);
+        $totalIncome =  $records->groupBy('type')->map(function ($items) {
+            return $items->sum('amount');
+        });
+
+        $totals = $records->groupBy('type')->map(fn ($items) => $items->sum('amount'))->toArray();
+        // Ensure both keys exist with a default value of 0.00
+        $totals = array_merge(['EXPENSE' => 0.00, 'INCOME' => 0.00], $totals);
+
+        $totalExpense = number_format($totals['EXPENSE'], 2, '.', '');
+        $totalIncome = number_format($totals['INCOME'], 2, '.', '');
+
+        return MoneyTransactionResource::collection($records)
+            ->additional([
+                'total_expense' => $totalExpense,
+                'total_income' => $totalIncome,
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+            ]);
     }
 
     public function show($id)
