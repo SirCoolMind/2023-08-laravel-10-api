@@ -65,12 +65,14 @@ class LookupController extends \App\Http\Controllers\Controller
         return response()->json(['data' => $allSubCategories]);
     }
 
-    public function getCategories()
+    public function getCategories(Request $request)
     {
         $typeIncomeExpense = $request->input('type_income_expense', FinanceTypeEnum::EXPENSE);
 
+        $cacheKey = "finance_categories_{$typeIncomeExpense}";
+
         // Cache the categories for 24 hours
-        $categories = \Cache::remember('categories', 86400, function () use($typeIncomeExpense) {
+        $categories = \Cache::remember($cacheKey, 86400, function () use($typeIncomeExpense) {
             return MoneyCategory::query()
                 ->where('type', $typeIncomeExpense)
                 ->get()
@@ -90,7 +92,7 @@ class LookupController extends \App\Http\Controllers\Controller
         $typeIncomeExpense = $request->input('type_income_expense', FinanceTypeEnum::EXPENSE);
 
         if ($moneyCategoryId) {
-            $cacheKey = "subcategories_{$moneyCategoryId}";
+            $cacheKey = "finance_subcategories_{$moneyCategoryId}_{$typeIncomeExpense}";
 
             $subcategories = \Cache::remember($cacheKey, 86400, function () use ($moneyCategoryId, $typeIncomeExpense) {
                 $category = MoneyCategory::where('id', $moneyCategoryId)->where('type', $typeIncomeExpense)->first();
