@@ -232,6 +232,24 @@ class MoneySubcategoriesTableSeeder extends Seeder
                 'created_at'        => '2024-11-17 17:19:25',
                 'updated_at'        => '2024-11-17 17:19:25',
             ],
+            24 => [
+                'id'                => 25,
+                'money_category_id' => 9,
+                'name'              => 'Company',
+                'description'       => '',
+                'user_id'           => 1,
+                'created_at'        => '2024-11-17 17:19:25',
+                'updated_at'        => '2024-11-17 17:19:25',
+            ],
+            25 => [
+                'id'                => 26,
+                'money_category_id' => 9,
+                'name'              => 'Other people transfer',
+                'description'       => '',
+                'user_id'           => 1,
+                'created_at'        => '2024-11-17 17:19:25',
+                'updated_at'        => '2024-11-17 17:19:25',
+            ],
         ]);
     }
 }
