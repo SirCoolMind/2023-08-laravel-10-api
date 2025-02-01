@@ -67,9 +67,12 @@ class LookupController extends \App\Http\Controllers\Controller
 
     public function getCategories()
     {
+        $typeIncomeExpense = $request->input('type_income_expense', FinanceTypeEnum::EXPENSE);
+
         // Cache the categories for 24 hours
-        $categories = \Cache::remember('categories', 86400, function () {
+        $categories = \Cache::remember('categories', 86400, function () use($typeIncomeExpense) {
             return MoneyCategory::query()
+                ->where('type', $typeIncomeExpense)
                 ->get()
                 ->map(fn ($category) => [
                     'id'          => $category->id,
@@ -84,12 +87,13 @@ class LookupController extends \App\Http\Controllers\Controller
     public function getSubCategories(Request $request)
     {
         $moneyCategoryId = $request->input('money_category_id');
+        $typeIncomeExpense = $request->input('type_income_expense', FinanceTypeEnum::EXPENSE);
 
         if ($moneyCategoryId) {
             $cacheKey = "subcategories_{$moneyCategoryId}";
 
-            $subcategories = \Cache::remember($cacheKey, 86400, function () use ($moneyCategoryId) {
-                $category = MoneyCategory::find($moneyCategoryId);
+            $subcategories = \Cache::remember($cacheKey, 86400, function () use ($moneyCategoryId, $typeIncomeExpense) {
+                $category = MoneyCategory::where('id', $moneyCategoryId)->where('type', $typeIncomeExpense)->first();
                 if (!$category) {
                     return response()->json(['error' => 'Invalid category'], 400);
                 }
