@@ -163,7 +163,7 @@ class KpopItemController extends \App\Http\Controllers\Controller
         $record->kpop_era_id = $request->input('kpop_era_id.id');
         $record->kpop_era_version_id = $request->input('kpop_era_version_id.id');
         $record->comment = $request->input('comment');
-        $record->bought_price = $request->input('bought_price');
+        $record->bought_price = $request->input('bought_price') || 0;
         $record->bought_place = $request->input('bought_place');
         $record->bought_comment = $request->input('bought_comment');
         $record->user_id = \Auth::user()->id;
@@ -172,7 +172,7 @@ class KpopItemController extends \App\Http\Controllers\Controller
         $record->save();
 
         if ($request->hasFile('photocard_image_upload')) {
-            UploadedFile::store($record, 'photocard_image', $request->file('photocard_image_upload'));
+            UploadedFile::store($record, 'photocard_image', $request->file('photocard_image_upload'), $imageQualityCompress = 40);
         }
 
         return $record;
