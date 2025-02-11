@@ -192,7 +192,7 @@ class KpopEraController extends \App\Http\Controllers\Controller
 
             $itemRecord->name = $version['name'];
             $itemRecord->kpop_era_id = $kpopEraId;
-            $itemRecord->project_id = $request->input('project_id');
+            $itemRecord->project_id = 111111;
             $itemRecord->save();
         }
 
