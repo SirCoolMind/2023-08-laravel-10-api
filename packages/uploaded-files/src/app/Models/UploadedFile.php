@@ -4,6 +4,10 @@ namespace SirCoolMind\UploadedFiles\app\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Intervention\Image\Drivers\Gd\Encoders\JpegEncoder;
+use Intervention\Image\Drivers\Gd\Encoders\PngEncoder;
+use Intervention\Image\Drivers\Gd\Encoders\WebpEncoder;
+use Intervention\Image\Laravel\Facades\Image;
 
 class UploadedFile extends Model
 {
@@ -30,7 +34,7 @@ class UploadedFile extends Model
     }
 
     // TODO:: create a helper class for store/retrieve/delete
-    public static function store($model = null, $type = null, $files = null)
+    public static function store($model = null, $type = null, $files = null, $imageQualityCompress = 75)
     {
         if (!$files || !$model) {
             \Log::error('UploadedFile::store() || Files or model is missing');
@@ -42,12 +46,18 @@ class UploadedFile extends Model
             $files = [$files];
         }
 
+        //hardcoded to soft delete old files
+        $deleted = UploadedFile::query()
+            ->where('model_type', get_class($model))
+            ->where('model_id', $model->id)
+            ->delete();
+
         foreach ($files as $file) {
-            UploadedFile::handleFileUpload($model, $type, $file);
+            UploadedFile::handleFileUpload($model, $type, $file, $imageQualityCompress);
         }
     }
 
-    private static function handleFileUpload($model = null, $type = null, $file = null)
+    private static function handleFileUpload($model = null, $type = null, $file = null, $imageQualityCompress = 75)
     {
         if (!$file) {
             \Log::error('UploadedFile::handleFileUpload() || File is missing');
@@ -70,7 +80,30 @@ class UploadedFile extends Model
 
             $pathName = $modelType.'/'.$modelId;
             $encryptedName = \Str::random(40).'.'.$file->getClientOriginalExtension();  // Encrypting filename
-            $filePath = $file->storeAs($pathName, $encryptedName, 'public');
+            $filePath = $pathName . '/' . $encryptedName; // Path where the file will be saved
+
+            // Check if the file is an image
+            if (str_starts_with($file->getMimeType(), 'image/')) {
+
+                // Resize & compress image
+                $image = Image::read($file);
+
+                // Choose the correct encoder based on the file extension
+                $extension = strtolower($file->getClientOriginalExtension());
+                $encoder = match ($extension) {
+                    'jpg', 'jpeg' => new JpegEncoder($imageQualityCompress),  // JPEG compression
+                    'png' => new PngEncoder(),
+                    'webp' => new WebpEncoder($imageQualityCompress),  // WebP compression
+                    default => new JpegEncoder($imageQualityCompress), // Default to JPEG
+                };
+
+                // Encode and store the image
+                \Storage::disk('public')->put($filePath, $image->encode($encoder));
+            } else {
+                // Store non-image files normally
+                $filePath = $file->storeAs($pathName, $encryptedName, 'public');
+            }
+
 
             $upload = new UploadedFile();
 
@@ -91,6 +124,7 @@ class UploadedFile extends Model
             \DB::rollback();
             \Log::error('UploadedFile::handleFileUpload() || error saving');
             \Log::debug($th->getMessage());
+            throw new \Exception("Error uploading file");
         }
     }
 }

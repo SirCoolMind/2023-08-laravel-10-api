@@ -9,6 +9,7 @@
         "dedoc/scramble": "^0.11.26",
         "guzzlehttp/guzzle": "^7.2",
         "honeybadger-io/honeybadger-laravel": "^4.2",
+        "intervention/image-laravel": "^1.4",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
