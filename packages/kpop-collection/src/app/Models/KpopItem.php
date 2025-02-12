@@ -3,10 +3,12 @@
 namespace HafizRuslan\KpopCollection\app\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
 class KpopItem extends Model
 {
+    use SoftDeletes;
     protected $table = 'kpop_items';
 
     public $fileTypePhotocardImage = 'photocard_image';
