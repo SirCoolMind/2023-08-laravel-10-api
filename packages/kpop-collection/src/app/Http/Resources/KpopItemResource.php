@@ -8,10 +8,10 @@ class KpopItemResource extends JsonResource
 {
     public function toArray($request)
     {
-        $photocardImage = $this->photocardImage;
         $imageData = [];
-        if ($photocardImage) {
+        foreach($this->photocardImages as $photocardImage) {
             $imageData[] = [
+                'id'           => $photocardImage->id,
                 'source'       => $photocardImage->retrievePath(),
                 'filename'     => $photocardImage->original_filename,
                 'is_available' => true,

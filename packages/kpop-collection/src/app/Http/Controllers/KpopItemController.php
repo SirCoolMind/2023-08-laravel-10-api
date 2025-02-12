@@ -5,6 +5,7 @@ namespace HafizRuslan\KpopCollection\app\Http\Controllers;
 use HafizRuslan\KpopCollection\app\Http\Resources\KpopItemResource;
 use HafizRuslan\KpopCollection\app\Models\KpopItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
 class KpopItemController extends \App\Http\Controllers\Controller
@@ -166,10 +167,41 @@ class KpopItemController extends \App\Http\Controllers\Controller
         $record->bought_price = $request->input('bought_price') || 0;
         $record->bought_place = $request->input('bought_place');
         $record->bought_comment = $request->input('bought_comment');
-        $record->user_id = \Auth::user()->id;
+        $record->user_id =  $record->user_id ?? \Auth::user()->id;
         $record->project_id = 1;
 
         $record->save();
+
+        $photocardImages = $request->input('photocard_image');
+        // If photocardImages is empty, delete all files related to the model
+        if (empty($photocardImages)) {
+            foreach ($record->photocardImages as $uploadedFile) {
+                Storage::disk('public')->delete($uploadedFile->path);
+                $uploadedFile->delete();
+            }
+        } else {
+            // If photocardImages is not empty, check which files to delete
+            foreach ($record->photocardImages as $uploadedFile) {
+                $shouldDelete = true;
+                // \Log::debug("file");
+                // \Log::debug($uploadedFile);
+                foreach ($photocardImages as $image) {
+                        // \Log::debug($image);
+                        if ( $image['id'] == $uploadedFile->id
+                            && $image['filename'] == $uploadedFile->original_filename
+                            && $image['is_available'] == 'true'
+                        ) {
+                            $shouldDelete = false;
+                            break;
+                        }
+                }
+
+                if ($shouldDelete) {
+                    Storage::disk('public')->delete($file->path);
+                    $file->delete();
+                }
+            }
+        }
 
         if ($request->hasFile('photocard_image_upload')) {
             UploadedFile::store($record, 'photocard_image', $request->file('photocard_image_upload'), $imageQualityCompress = 40);
@@ -195,7 +227,7 @@ class KpopItemController extends \App\Http\Controllers\Controller
             // 'version_name' => ['required'],
             'kpop_era_id'         => ['required'],
             'kpop_era_version_id' => ['required'],
-            'photocard_image'     => ['nullable', 'file', 'image', 'max:2048'],
+            'photocard_image_upload' => ['nullable', 'file', 'image', 'max:2048'],
         ];
         $rules = array_merge($rules, $otherRules);
 

@@ -24,9 +24,9 @@ class KpopItem extends Model
         return $this->hasOne(KpopEraVersion::class, 'id', 'kpop_era_version_id');
     }
 
-    public function photocardImage()
+    public function photocardImages()
     {
-        return $this->morphOne(UploadedFile::class, 'model')
+        return $this->morphMany(UploadedFile::class, 'model')
             ->where('type', $this->fileTypePhotocardImage);
     }
 }
