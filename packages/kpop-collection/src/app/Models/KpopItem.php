@@ -11,7 +11,7 @@ class KpopItem extends Model
     use SoftDeletes;
     protected $table = 'kpop_items';
 
-    public $fileTypePhotocardImage = 'photocard_image';
+    const FileTypePhotocardImage = 'photocard_image';
 
     /*relationship */
     public function era()
@@ -27,6 +27,6 @@ class KpopItem extends Model
     public function photocardImages()
     {
         return $this->morphMany(UploadedFile::class, 'model')
-            ->where('type', $this->fileTypePhotocardImage);
+            ->where('type', self::FileTypePhotocardImage);
     }
 }

@@ -204,7 +204,7 @@ class KpopItemController extends \App\Http\Controllers\Controller
         }
 
         if ($request->hasFile('photocard_image_upload')) {
-            UploadedFile::store($record, 'photocard_image', $request->file('photocard_image_upload'), $imageQualityCompress = 40);
+            UploadedFile::store($record, KpopItem::FileTypePhotocardImage, $request->file('photocard_image_upload'), $imageQualityCompress = 40);
         }
 
         return $record;
