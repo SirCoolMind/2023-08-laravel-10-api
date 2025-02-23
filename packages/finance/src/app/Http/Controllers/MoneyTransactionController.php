@@ -257,7 +257,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         $rules = [
             'amount'           => ['required'],
             'transaction_date' => ['required', 'date'],
-            'description'      => ['required'],
+            // 'description'      => ['required'],
             // 'category'         => ['required'],
             // 'sub_category'     => ['required'],
             'money_account.id'        => ['required'],
