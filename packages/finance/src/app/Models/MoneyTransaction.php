@@ -5,10 +5,13 @@ namespace HafizRuslan\Finance\app\Models;
 use HafizRuslan\Finance\app\Enums\FinanceTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
 class MoneyTransaction extends Model
 {
     use HasFactory;
+
+    const FileTypeTransactionImages = 'transaction_images';
 
     /**
      * The attributes that should be cast.
@@ -33,6 +36,12 @@ class MoneyTransaction extends Model
         return \Carbon\Carbon::parse($this->attributes['transaction_date'])
             ->utc()
             ->format('Y-m-d');
+    }
+
+    public function transactionImages()
+    {
+        return $this->morphMany(UploadedFile::class, 'model')
+            ->where('type', self::FileTypeTransactionImages);
     }
 
     public function moneyCategory()

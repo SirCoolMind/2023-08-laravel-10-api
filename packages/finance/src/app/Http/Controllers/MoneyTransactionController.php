@@ -7,6 +7,7 @@ use HafizRuslan\Finance\app\Http\Resources\MoneyTransactionResource;
 use HafizRuslan\Finance\app\Models\MoneyTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
+use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
 class MoneyTransactionController extends \App\Http\Controllers\Controller
 {
@@ -237,6 +238,41 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
 
         // TODO : should have user_id tied to money transaction
         $record->save();
+
+        $existingImages = $request->input('transaction_images');
+        // If existingImages is empty, delete all files related to the model
+        if (empty($existingImages)) {
+            foreach ($record->transactionImages as $uploadedFile) {
+                Storage::disk('public')->delete($uploadedFile->path);
+                $uploadedFile->delete();
+            }
+        } else {
+            // If existingImages is not empty, check which files to delete
+            foreach ($record->transactionImages as $uploadedFile) {
+                $shouldDelete = true;
+                // \Log::debug("file");
+                // \Log::debug($uploadedFile);
+                foreach ($existingImages as $image) {
+                        // \Log::debug($image);
+                        if ( $image['id'] == $uploadedFile->id
+                            && $image['filename'] == $uploadedFile->original_filename
+                            && $image['is_available'] == 'true'
+                        ) {
+                            $shouldDelete = false;
+                            break;
+                        }
+                }
+
+                if ($shouldDelete) {
+                    Storage::disk('public')->delete($file->path);
+                    $file->delete();
+                }
+            }
+        }
+
+        if ($request->hasFile('transaction_images_upload')) {
+            UploadedFile::store($record, MoneyTransaction::FileTypeTransactionImages , $request->file('transaction_images_upload'));
+        }
 
         return $record;
     }

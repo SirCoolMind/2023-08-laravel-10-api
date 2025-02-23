@@ -14,6 +14,16 @@ class MoneyTransactionResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $transactionImageData = [];
+        foreach($this->transactionImages as $file) {
+            $transactionImageData[] = [
+                'id'           => $photocardImage->id,
+                'source'       => $photocardImage->retrievePath(),
+                'filename'     => $photocardImage->original_filename,
+                'is_available' => true,
+            ];
+        }
+
         return [
             'id'                => $this->id,
             'amount'            => $this->amount,
@@ -30,6 +40,7 @@ class MoneyTransactionResource extends JsonResource
                 'name' => $this->type?->label(),
             ],
             'created_at'        => $this->created_at->format('d/m/Y'),
+            'transaction_images' => $transactionImageData,
         ];
     }
 }
