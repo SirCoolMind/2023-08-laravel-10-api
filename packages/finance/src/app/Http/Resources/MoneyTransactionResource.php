@@ -17,9 +17,9 @@ class MoneyTransactionResource extends JsonResource
         $transactionImageData = [];
         foreach($this->transactionImages as $file) {
             $transactionImageData[] = [
-                'id'           => $photocardImage->id,
-                'source'       => $photocardImage->retrievePath(),
-                'filename'     => $photocardImage->original_filename,
+                'id'           => $file->id,
+                'source'       => $file->retrievePath(),
+                'filename'     => $file->original_filename,
                 'is_available' => true,
             ];
         }
