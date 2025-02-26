@@ -6,6 +6,7 @@ use HafizRuslan\Finance\app\Enums\FinanceTypeEnum;
 use HafizRuslan\Finance\app\Http\Resources\MoneyTransactionResource;
 use HafizRuslan\Finance\app\Models\MoneyTransaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Enum;
 use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
