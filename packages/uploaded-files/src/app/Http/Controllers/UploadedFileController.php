@@ -9,7 +9,7 @@ use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
 class UploadedFileController extends \App\Http\Controllers\Controller
 {
-    public function download(Request $request, $id)
+    public function download(Request $request, $id, $filename = null)
     {
         // Validate the signature
         if (!$request->hasValidSignature()) {

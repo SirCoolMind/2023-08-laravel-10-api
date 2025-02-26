@@ -16,6 +16,7 @@ class UploadedFile extends Model
     protected $fillable = [
         'filename',
         'original_filename',
+        'safe_filename',
         'type',
         'path',
         'size',
@@ -30,7 +31,7 @@ class UploadedFile extends Model
     public function retrievePath()
     {
         // Generate a signed URL valid for 1 hour (3600 seconds)
-        return \URL::signedRoute('files.download', ['id' => $this->id], now()->addHour());
+        return \URL::signedRoute('files.download', ['id' => $this->id, 'filename' => $this->safe_filename ], now()->addHour());
     }
 
     // TODO:: create a helper class for store/retrieve/delete
@@ -113,6 +114,7 @@ class UploadedFile extends Model
 
             $upload->filename = $encryptedName;
             $upload->original_filename = $file->getClientOriginalName();
+            $upload->safe_filename = $upload::makeUrlSafe($file->getClientOriginalName());
             $upload->path = $filePath;
             $upload->size = $file->getSize();
             $upload->extension = strtolower($file->getClientOriginalExtension());
@@ -126,5 +128,22 @@ class UploadedFile extends Model
             \Log::debug($th->getMessage());
             throw new \Exception("Error uploading file");
         }
+    }
+
+    private static function makeUrlSafe($string) {
+        // Convert UTF-8 characters to ASCII (fallback to original if conversion fails)
+        $transliterated = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $string);
+        if ($transliterated === false) {
+            $transliterated = $string;
+        }
+    
+        // Remove special characters except alphanumerics, spaces, and hyphens
+        $cleaned = preg_replace('/[^a-zA-Z0-9\s-]/u', '', $transliterated);
+    
+        // Replace multiple spaces or hyphens with a single hyphen
+        $cleaned = preg_replace('/[\s-]+/', '-', trim($cleaned, " \t\n\r\0\x0B-"));
+    
+        // Convert to lowercase
+        return strtolower($cleaned);
     }
 }
