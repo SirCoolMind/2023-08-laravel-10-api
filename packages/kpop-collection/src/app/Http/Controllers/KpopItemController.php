@@ -167,7 +167,7 @@ class KpopItemController extends \App\Http\Controllers\Controller
         $record->bought_price = $request->input('bought_price') || 0;
         $record->bought_place = $request->input('bought_place');
         $record->bought_comment = $request->input('bought_comment');
-        $record->user_id =  $record->user_id ?? \Auth::user()->id;
+        $record->user_id = $record->user_id ?? \Auth::user()->id;
         $record->project_id = 1;
 
         $record->save();
@@ -186,14 +186,14 @@ class KpopItemController extends \App\Http\Controllers\Controller
                 // \Log::debug("file");
                 // \Log::debug($uploadedFile);
                 foreach ($existingImages as $image) {
-                        // \Log::debug($image);
-                        if ( $image['id'] == $uploadedFile->id
-                            && $image['filename'] == $uploadedFile->original_filename
-                            && $image['is_available'] == 'true'
-                        ) {
-                            $shouldDelete = false;
-                            break;
-                        }
+                    // \Log::debug($image);
+                    if ($image['id'] == $uploadedFile->id
+                        && $image['filename'] == $uploadedFile->original_filename
+                        && $image['is_available'] == 'true'
+                    ) {
+                        $shouldDelete = false;
+                        break;
+                    }
                 }
 
                 if ($shouldDelete) {
@@ -225,8 +225,8 @@ class KpopItemController extends \App\Http\Controllers\Controller
         $rules = [
             'artist_name' => ['required'],
             // 'version_name' => ['required'],
-            'kpop_era_id'         => ['required'],
-            'kpop_era_version_id' => ['required'],
+            'kpop_era_id'            => ['required'],
+            'kpop_era_version_id'    => ['required'],
             'photocard_image_upload' => ['nullable', 'file', 'image', 'max:2048'],
         ];
         $rules = array_merge($rules, $otherRules);

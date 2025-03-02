@@ -72,7 +72,7 @@ class LookupController extends \App\Http\Controllers\Controller
         $cacheKey = "finance_categories_{$typeIncomeExpense}";
 
         // Cache the categories for 24 hours
-        $categories = \Cache::remember($cacheKey, 86400, function () use($typeIncomeExpense) {
+        $categories = \Cache::remember($cacheKey, 86400, function () use ($typeIncomeExpense) {
             return MoneyCategory::query()
                 ->where('type', $typeIncomeExpense)
                 ->get()

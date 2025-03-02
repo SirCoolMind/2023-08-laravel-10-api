@@ -9,7 +9,7 @@ class KpopItemResource extends JsonResource
     public function toArray($request)
     {
         $imageData = [];
-        foreach($this->photocardImages as $file) {
+        foreach ($this->photocardImages as $file) {
             $imageData[] = [
                 'id'           => $file->id,
                 'source'       => $file->retrievePath(),
