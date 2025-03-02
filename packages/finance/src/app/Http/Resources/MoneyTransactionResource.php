@@ -15,7 +15,7 @@ class MoneyTransactionResource extends JsonResource
     public function toArray(Request $request): array
     {
         $transactionImageData = [];
-        foreach($this->transactionImages as $file) {
+        foreach ($this->transactionImages as $file) {
             $transactionImageData[] = [
                 'id'           => $file->id,
                 'source'       => $file->retrievePath(),
@@ -39,7 +39,7 @@ class MoneyTransactionResource extends JsonResource
                 'id'   => $this->type?->value,
                 'name' => $this->type?->label(),
             ],
-            'created_at'        => $this->created_at->format('d/m/Y'),
+            'created_at'         => $this->created_at->format('d/m/Y'),
             'transaction_images' => $transactionImageData,
         ];
     }

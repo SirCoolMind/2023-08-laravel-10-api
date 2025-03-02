@@ -38,12 +38,11 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         // * fetch
         $records = MoneyTransaction::with($this->withRelations())
             ->orderBy($sortBy, $descending)
-            ->when($startDate, function($query) use($startDate) {
-
-                $query->where('transaction_date', '>=' , \Carbon\Carbon::parse($startDate)->startOfDay());
+            ->when($startDate, function ($query) use ($startDate) {
+                $query->where('transaction_date', '>=', \Carbon\Carbon::parse($startDate)->startOfDay());
             })
-            ->when($endDate, function($query) use($endDate) {
-                $query->where('transaction_date', '<=' ,\Carbon\Carbon::parse($endDate)->endOfDay());
+            ->when($endDate, function ($query) use ($endDate) {
+                $query->where('transaction_date', '<=', \Carbon\Carbon::parse($endDate)->endOfDay());
             })
             ->paginate(request()->input('rows_per_page'));
 
@@ -63,7 +62,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
 
         $startDate = request()->input('filter.start_date');
         $endDate = request()->input('filter.end_date');
-        if(!$startDate) {
+        if (!$startDate) {
             $startDate = \Carbon\Carbon::now()->startOfMonth();
             $endDate = $startDate->clone()->endOfMonth();
         }
@@ -71,16 +70,15 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         // * fetch
         $records = MoneyTransaction::with($this->withRelations())
             ->orderBy($sortBy, $descending)
-            ->when($startDate, function($query) use($startDate) {
-
-                $query->where('transaction_date', '>=' , \Carbon\Carbon::parse($startDate)->startOfDay());
+            ->when($startDate, function ($query) use ($startDate) {
+                $query->where('transaction_date', '>=', \Carbon\Carbon::parse($startDate)->startOfDay());
             })
-            ->when($endDate, function($query) use($endDate) {
-                $query->where('transaction_date', '<=' ,\Carbon\Carbon::parse($endDate)->endOfDay());
+            ->when($endDate, function ($query) use ($endDate) {
+                $query->where('transaction_date', '<=', \Carbon\Carbon::parse($endDate)->endOfDay());
             })
             ->get();
 
-        $totalIncome =  $records->groupBy('type')->map(function ($items) {
+        $totalIncome = $records->groupBy('type')->map(function ($items) {
             return $items->sum('amount');
         });
 
@@ -94,9 +92,9 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         return MoneyTransactionResource::collection($records)
             ->additional([
                 'total_expense' => $totalExpense,
-                'total_income' => $totalIncome,
-                'start_date' => $startDate,
-                'end_date' => $endDate,
+                'total_income'  => $totalIncome,
+                'start_date'    => $startDate,
+                'end_date'      => $endDate,
             ]);
     }
 
@@ -254,14 +252,14 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
                 // \Log::debug("file");
                 // \Log::debug($uploadedFile);
                 foreach ($existingImages as $image) {
-                        // \Log::debug($image);
-                        if ( $image['id'] == $uploadedFile->id
-                            && $image['filename'] == $uploadedFile->original_filename
-                            && $image['is_available'] == 'true'
-                        ) {
-                            $shouldDelete = false;
-                            break;
-                        }
+                    // \Log::debug($image);
+                    if ($image['id'] == $uploadedFile->id
+                        && $image['filename'] == $uploadedFile->original_filename
+                        && $image['is_available'] == 'true'
+                    ) {
+                        $shouldDelete = false;
+                        break;
+                    }
                 }
 
                 if ($shouldDelete) {
@@ -272,7 +270,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         }
 
         if ($request->hasFile('transaction_images_upload')) {
-            UploadedFile::store($record, MoneyTransaction::FileTypeTransactionImages , $request->file('transaction_images_upload'));
+            UploadedFile::store($record, MoneyTransaction::FileTypeTransactionImages, $request->file('transaction_images_upload'));
         }
 
         return $record;
