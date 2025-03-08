@@ -47,12 +47,6 @@ class UploadedFile extends Model
             $files = [$files];
         }
 
-        //hardcoded to soft delete old files
-        $deleted = UploadedFile::query()
-            ->where('model_type', get_class($model))
-            ->where('model_id', $model->id)
-            ->delete();
-
         foreach ($files as $file) {
             UploadedFile::handleFileUpload($model, $type, $file, $imageQualityCompress);
         }
