@@ -13,6 +13,8 @@ class UploadedFile extends Model
 {
     use SoftDeletes;
 
+    const FILE_SIZE_LIMIT = '5242880'; //5MB
+
     protected $fillable = [
         'filename',
         'original_filename',
@@ -50,6 +52,7 @@ class UploadedFile extends Model
         foreach ($files as $file) {
             UploadedFile::handleFileUpload($model, $type, $file, $imageQualityCompress);
         }
+       
     }
 
     private static function handleFileUpload($model = null, $type = null, $file = null, $imageQualityCompress = 75)
@@ -57,13 +60,19 @@ class UploadedFile extends Model
         if (!$file) {
             \Log::error('UploadedFile::handleFileUpload() || File is missing');
 
-            return;
+            throw new \Exception("File is missing");
+        }
+
+        if ($file->getSize() >= self::FILE_SIZE_LIMIT) {
+            \Log::error('UploadedFile::handleFileUpload() || File is larger than 5MB');
+
+            throw new \Exception("File is larger than 5MB");
         }
 
         if (!$model) {
             \Log::error('UploadedFile::handleFileUpload() || Model is missing');
 
-            return;
+            throw new \Exception("Model is missing");
         }
 
         try {
