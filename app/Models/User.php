@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
 class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
+
+    const FileTypeProfileImage = 'profile_image';
 
     /**
      * The attributes that are mass assignable.
@@ -44,4 +47,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password'          => 'hashed',
     ];
+
+    public function profileImages()
+    {
+        return $this->morphMany(UploadedFile::class, 'model')
+            ->where('type', self::FileTypeProfileImage);
+    }
 }

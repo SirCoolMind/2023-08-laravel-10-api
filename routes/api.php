@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\CompleteTaskController;
 use App\Http\Controllers\Api\V1\TaskController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserSettingAccountController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,10 @@ Route::post('/login', [AuthController::class, 'login']);
 //Protected route
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::prefix('user-setting')->group(function () {
+        Route::apiResource('account', UserSettingAccountController::class)->only(['update', 'index']);
+    });
 
     Route::prefix('v1')->group(function () {
         Route::apiResource('/tasks', TaskController::class);
