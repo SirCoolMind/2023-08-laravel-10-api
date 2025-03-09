@@ -85,6 +85,7 @@ class UploadedFile extends Model
             $pathName = $modelType.'/'.$modelId;
             $encryptedName = \Str::random(40).'.'.$file->getClientOriginalExtension();  // Encrypting filename
             $filePath = $pathName.'/'.$encryptedName; // Path where the file will be saved
+            $filePath = str_replace('\\', '/', $filePath); // cleanup any backslash to slash
 
             // Check if the file is an image
             if (str_starts_with($file->getMimeType(), 'image/')) {
@@ -115,10 +116,11 @@ class UploadedFile extends Model
 
             $upload->filename = $encryptedName;
             $upload->original_filename = $file->getClientOriginalName();
-            $upload->safe_filename = $upload::makeUrlSafe($file->getClientOriginalName());
+            $upload->extension = strtolower($file->getClientOriginalExtension());
+            $safeFilename = $upload::makeUrlSafe(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+            $upload->safe_filename = $safeFilename.".".$upload->extension;
             $upload->path = $filePath;
             $upload->size = $file->getSize();
-            $upload->extension = strtolower($file->getClientOriginalExtension());
 
             $upload->save();
 
