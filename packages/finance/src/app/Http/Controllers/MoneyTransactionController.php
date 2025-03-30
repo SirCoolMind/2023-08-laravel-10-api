@@ -225,7 +225,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         $isNew = $record->exists ? true : false;
         $originals = $record->getOriginal();
 
-        $record->amount = $request->input('amount');
+        $record->amount = preg_replace('/[,.]/', '', $request->input('amount'));
         $record->transaction_date = \Carbon\Carbon::parse($request->input('transaction_date'))->setTimezone(config('app.timezone'));
         $record->description = $request->input('description');
         // $record->category = $request->input('category');
