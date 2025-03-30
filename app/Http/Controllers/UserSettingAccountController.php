@@ -9,6 +9,7 @@ use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
 use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
 class UserSettingAccountController extends Controller
@@ -74,7 +75,26 @@ class UserSettingAccountController extends Controller
             }
     
             if ($request->hasFile('profile_image_upload')) {
-                UploadedFile::store($user, User::FileTypeProfileImage, $request->file('profile_image_upload'), $imageQualityCompress = 40);
+                //Resize profile image to 120x120
+                $file = $request->file('profile_image_upload.0');
+                $filePath = $file->getPathname();
+                $image = ImageManager::imagick()->read($filePath)->cover(120, 120);
+                
+                $tempPath = sys_get_temp_dir() . '/' . \Str::uuid() . '.' . $file->getClientOriginalExtension();
+                $image->save($tempPath, 100);
+
+                $resizedFile = new \Illuminate\Http\UploadedFile(
+                    $tempPath,
+                    $file->getClientOriginalName(),
+                    $file->getClientMimeType(),
+                    0, // Error status (0 means no error)
+                    true // Test mode (prevents moving the file)
+                );
+
+                UploadedFile::store($user, User::FileTypeProfileImage, $resizedFile, $imageQualityCompress = 90);
+
+                // 🔥 Delete the temp file after storing
+                unlink($tempPath);
             }
 
             $user->refresh();
