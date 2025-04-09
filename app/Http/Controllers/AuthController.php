@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
+use App\Http\Resources\UserDataResource;
 use App\Models\User;
 use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         return $this->success([
+            'user_data' => new UserDataResource($user),
             'user_email' => $user->email,
             'user_name'  => $user->name,
             'token'      => $user->createToken('API Token of '.$user->name)->plainTextToken,
@@ -40,6 +42,7 @@ class AuthController extends Controller
         ]);
 
         return $this->success([
+            'user_data' => new UserDataResource($user),
             'user_email' => $user->email,
             'user_name'  => $user->name,
             'token'      => $user->createToken('API Token of '.$user->name)->plainTextToken,
