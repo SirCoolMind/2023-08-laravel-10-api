@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'lookup'], function () {
     // Protected route
-    Route::group(['middleware' => ['auth']], function () {
+    Route::group(['middleware' => ['auth:api']], function () {
         Route::get('clear-categories-cache', [LookupController::class, 'clearCategoriesCache']);
         Route::get('get-accounts', [LookupController::class, 'getAccounts']);
     });

@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterUserRequest;
 use App\Http\Resources\UserDataResource;
 use App\Models\User;
 use App\Traits\HttpResponses;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,13 +23,14 @@ class AuthController extends Controller
             return $this->error('', 'Credentials do not match', 401);
         }
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::find(Auth::user()->id);
+        $token = $user->createToken('appToken')->accessToken;
 
         return $this->success([
-            'user_data' => new UserDataResource($user),
+            'user_data'  => new UserDataResource($user),
             'user_email' => $user->email,
             'user_name'  => $user->name,
-            'token'      => $user->createToken('API Token of '.$user->name)->plainTextToken,
+            'token'      => $token,
         ]);
     }
 
@@ -42,16 +44,18 @@ class AuthController extends Controller
         ]);
 
         return $this->success([
-            'user_data' => new UserDataResource($user),
+            'user_data'  => new UserDataResource($user),
             'user_email' => $user->email,
             'user_name'  => $user->name,
-            'token'      => $user->createToken('API Token of '.$user->name)->plainTextToken,
+            'token'      => $user->createToken('appToken')->accessToken,
         ]);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        Auth::user()->currentAccessToken()->delete();
+        if (Auth::user()) {
+            $request->user()->token()->revoke();
+        }
 
         return $this->success([
             'message' => 'You have successfully been logged out.',
