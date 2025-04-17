@@ -12,7 +12,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('sanctum:prune-expired --hours=24')->daily();
         $schedule->command('backup:run --only-db')->daily()->at('01:00')
             ->onFailure(function () {
                 \Log::error('Command backup:run failed at '.\Carbon\Carbon::now()->toDateTimeString());

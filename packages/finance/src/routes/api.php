@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'api/finance/v1'], function () {
     // Admin
-    Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::group(['middleware' => ['auth']], function () {
         Route::apiResource('transaction', MoneyTransactionController::class);
         Route::apiResource('admin/money-category', MoneyCategoryController::class);
         Route::apiResource('admin/money-account', MoneyAccountController::class);
@@ -19,7 +19,7 @@ Route::group(['prefix' => 'api/finance/v1'], function () {
 
 Route::group(['prefix' => 'api/finance/v2'], function () {
     // Admin
-    Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::group(['middleware' => ['auth']], function () {
         Route::get('transaction', [MoneyTransactionController::class, 'indexV2']);
     });
 });
