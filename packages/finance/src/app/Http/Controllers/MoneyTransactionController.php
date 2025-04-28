@@ -86,8 +86,8 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         // Ensure both keys exist with a default value of 0.00
         $totals = array_merge(['EXPENSE' => 0.00, 'INCOME' => 0.00], $totals);
 
-        $totalExpense = number_format($totals['EXPENSE'], 2, '.', '');
-        $totalIncome = number_format($totals['INCOME'], 2, '.', '');
+        $totalExpense = number_format($totals['EXPENSE'] / 100, 2, '.', '');
+        $totalIncome = number_format($totals['INCOME'] /100, 2, '.', '');
 
         return MoneyTransactionResource::collection($records)
             ->additional([
