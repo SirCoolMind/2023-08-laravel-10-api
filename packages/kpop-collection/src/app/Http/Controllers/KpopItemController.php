@@ -17,23 +17,41 @@ class KpopItemController extends \App\Http\Controllers\Controller
         }
 
         // * sort
-        $sortBy = '';
+        $orderBy = '';
         switch (request()->input('sort_by')) {
+            case 'version':
+                $orderBy = 'version';
+                break;
             default:
-                $sortBy = 'id';
+                $orderBy = 'id';
                 break;
         }
 
-        $descending = request()->input('descending') == 'true' ? 'DESC' : 'ASC';
-        $search = request()->input('filter.search');
+        $descending = request()->input('order_by') == 'true' ? 'DESC' : 'ASC';
 
         // $projectData = \App\Models\Project::find(request()->input('project_id'));
 
         // * fetch
-        $record = KpopItem::with($this->withRelations())
-            ->orderBy($sortBy, $descending)
-            ->paginate(request()->input('rows_per_page'));
+        $query = KpopItem::with($this->withRelations());
 
+        //Custom Relationship orderBy
+        if ($orderBy === 'version') {
+            $query->select('kpop_items.*')
+                ->join('kpop_eras', 'kpop_eras.id', '=', 'kpop_items.kpop_era_id')
+                ->orderBy('kpop_eras.name', $descending);
+        } else {
+            $query->orderBy($orderBy, $descending);
+        }
+
+        // Search filter
+        $search = request()->input('q');
+        if ($search) {
+            $query->where(function($subQuery) use($search) {
+                $subQuery->where('kpop_items.artist_name', 'like', "%$search%");
+            });
+        }
+
+        $record = $query->paginate(request()->input('rows_per_page'));
         return KpopItemResource::collection($record);
     }
 
