@@ -23,16 +23,36 @@ class KpopEraController extends \App\Http\Controllers\Controller
                 break;
         }
 
-        $descending = request()->input('descending') == 'true' ? 'DESC' : 'ASC';
-        $search = request()->input('filter.search');
+        // * sort
+        $orderBy = '';
+        switch (request()->input('sort_by')) {
+            case 'era':
+                $orderBy = 'name';
+                break;
+            default:
+                $orderBy = 'id';
+                break;
+        }
+
+        $descending = strtolower(request()->input('order_by')) == 'desc' ? 'DESC' : 'ASC';
 
         // $projectData = \App\Models\Project::find(request()->input('project_id'));
 
         // * fetch
-        $record = KpopEra::with($this->withRelations())
-            ->orderBy($sortBy, $descending)
-            ->paginate(request()->input('rows_per_page'));
+        $query = KpopEra::with($this->withRelations());
 
+        //Custom Relationship orderBy
+        $query->orderBy($orderBy, $descending);
+
+        // Search filter
+        $search = request()->input('q');
+        if ($search) {
+            $query->where(function($subQuery) use($search) {
+                $subQuery->where('kpop_eras.name', 'like', "%$search%");
+            });
+        }
+
+        $record = $query->paginate(request()->input('rows_per_page'));
         return KpopEraResource::collection($record);
     }
 

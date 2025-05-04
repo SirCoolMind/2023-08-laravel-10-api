@@ -27,7 +27,7 @@ class KpopItemController extends \App\Http\Controllers\Controller
                 break;
         }
 
-        $descending = request()->input('order_by') == 'true' ? 'DESC' : 'ASC';
+        $descending = strtolower(request()->input('order_by')) == 'desc' ? 'DESC' : 'ASC';
 
         // $projectData = \App\Models\Project::find(request()->input('project_id'));
 
