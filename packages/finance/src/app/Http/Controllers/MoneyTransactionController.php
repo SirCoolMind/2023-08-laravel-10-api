@@ -263,8 +263,8 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
                 }
 
                 if ($shouldDelete) {
-                    Storage::disk('public')->delete($file->path);
-                    $file->delete();
+                    Storage::disk('public')->delete($uploadedFile->path);
+                    $uploadedFile->delete();
                 }
             }
         }
