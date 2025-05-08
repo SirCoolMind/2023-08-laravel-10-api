@@ -197,7 +197,7 @@ class MoneyCategoryController extends \App\Http\Controllers\Controller
             $itemRecord->money_category_id = $recordId;
             $itemRecord->name = data_get($item, 'name');
             $itemRecord->description = data_get($item, 'description');
-            $itemRecord->user_id = data_get($item, 'user_id', \Auth::user()?->id);
+            $itemRecord->user_id = $record->user_id;
             $itemRecord->save();
         }
 
