@@ -18,4 +18,20 @@ class MoneyCategory extends Model
     {
         return $this->hasMany(MoneySubCategory::class, 'money_category_id', 'id');
     }
+
+    public function clearUserCache(): void
+    {
+        \App\Helpers\CacheTracker::clearTracked("finance_keys_{$this->user_id}");
+    }
+
+    protected static function booted()
+    {
+        static::saved(function ($account) {
+            $account->clearUserCache();
+        });
+
+        static::deleted(function ($account) {
+            $account->clearUserCache();
+        });
+    }
 }

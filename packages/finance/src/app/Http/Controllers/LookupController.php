@@ -68,12 +68,15 @@ class LookupController extends \App\Http\Controllers\Controller
     public function getCategories(Request $request)
     {
         $typeIncomeExpense = $request->input('type_income_expense', FinanceTypeEnum::EXPENSE);
-
-        $cacheKey = "finance_categories_{$typeIncomeExpense}";
+        $userId = \Auth::id();
 
         // Cache the categories for 24 hours
-        $categories = \Cache::remember($cacheKey, 86400, function () use ($typeIncomeExpense) {
+        $cacheKey = "finance_categories_{$userId}_{$typeIncomeExpense}";
+        \App\Helpers\CacheTracker::track("finance_keys_{$userId}", $cacheKey);
+
+        $categories = \Cache::remember($cacheKey, 86400, function () use ($typeIncomeExpense, $userId) {
             return MoneyCategory::query()
+                ->where('user_id', $userId)
                 ->where('type', $typeIncomeExpense)
                 ->get()
                 ->map(fn ($category) => [
@@ -90,12 +93,18 @@ class LookupController extends \App\Http\Controllers\Controller
     {
         $moneyCategoryId = $request->input('money_category_id');
         $typeIncomeExpense = $request->input('type_income_expense', FinanceTypeEnum::EXPENSE);
+        $userId = \Auth::id();
 
         if ($moneyCategoryId) {
-            $cacheKey = "finance_subcategories_{$moneyCategoryId}_{$typeIncomeExpense}";
+            $cacheKey = "finance_subcategories_{$userId}_{$moneyCategoryId}_{$typeIncomeExpense}";
+            \App\Helpers\CacheTracker::track("finance_keys_{$userId}", $cacheKey);
 
-            $subcategories = \Cache::remember($cacheKey, 86400, function () use ($moneyCategoryId, $typeIncomeExpense) {
-                $category = MoneyCategory::where('id', $moneyCategoryId)->where('type', $typeIncomeExpense)->first();
+            $subcategories = \Cache::remember($cacheKey, 86400, function () use ($moneyCategoryId, $typeIncomeExpense, $userId) {
+                $category = MoneyCategory::query()
+                    ->where('id', $moneyCategoryId)
+                    ->where('user_id', $userId)
+                    ->where('type', $typeIncomeExpense)
+                    ->first();
                 if (!$category) {
                     return response()->json(['error' => 'Invalid category'], 400);
                 }
@@ -113,9 +122,15 @@ class LookupController extends \App\Http\Controllers\Controller
         }
 
         // Cache all subcategories grouped by category for 24 hours
-        $allSubCategories = \Cache::remember('all_subcategories', 86400, function () {
+        $cacheKey = "finance_subcategories_{$userId}_{$typeIncomeExpense}";
+        \App\Helpers\CacheTracker::track("finance_keys_{$userId}", $cacheKey);
+
+        $allSubCategories = \Cache::remember($cacheKey, 86400, function () use ($userId, $typeIncomeExpense) {
             $result = [];
-            $categories = MoneyCategory::get();
+            $categories = MoneyCategory::query()
+                ->where('user_id', $userId)
+                ->where('type', $typeIncomeExpense)
+                ->get();
             foreach ($categories as $category) {
                 $result = array_merge(
                     $result,
@@ -151,7 +166,8 @@ class LookupController extends \App\Http\Controllers\Controller
     public function getAccounts()
     {
         // Cache money_accounts for 24 hours
-        $accounts = \Cache::remember("money_accounts_".\Auth::id(), 86400, function () {
+        $cacheKey = "money_accounts_".\Auth::id();
+        $accounts = \Cache::remember($cacheKey, 86400, function () {
             return MoneyAccount::query()
                 ->where('user_id', \Auth::id())
                 ->get()
