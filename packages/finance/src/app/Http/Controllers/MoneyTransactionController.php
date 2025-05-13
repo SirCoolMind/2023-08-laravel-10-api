@@ -4,6 +4,7 @@ namespace HafizRuslan\Finance\app\Http\Controllers;
 
 use HafizRuslan\Finance\app\Enums\FinanceTypeEnum;
 use HafizRuslan\Finance\app\Http\Resources\MoneyTransactionResource;
+use HafizRuslan\Finance\app\Http\Resources\MoneyTransactionV2Resource;
 use HafizRuslan\Finance\app\Models\MoneyTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -89,7 +90,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         $totalExpense = number_format($totals['EXPENSE'] / 100, 2, '.', '');
         $totalIncome = number_format($totals['INCOME'] /100, 2, '.', '');
 
-        return MoneyTransactionResource::collection($records)
+        return MoneyTransactionV2Resource::collection($records)
             ->additional([
                 'total_expense' => $totalExpense,
                 'total_income'  => $totalIncome,
