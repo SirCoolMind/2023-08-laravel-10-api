@@ -34,7 +34,7 @@ class MoneyTransaction extends Model
     public function getTransactionDateInYmd()
     {
         return \Carbon\Carbon::parse($this->attributes['transaction_date'])
-            ->utc()
+            // ->utc() // no need utc because not enough data for front end to declare utc or not
             ->format('Y-m-d');
     }
 
