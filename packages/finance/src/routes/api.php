@@ -1,5 +1,6 @@
 <?php
 
+use HafizRuslan\Finance\app\Http\Controllers\FinanceDashboardController;
 use HafizRuslan\Finance\app\Http\Controllers\MoneyAccountController;
 use HafizRuslan\Finance\app\Http\Controllers\MoneyCategoryController;
 use HafizRuslan\Finance\app\Http\Controllers\MoneyTransactionController;
@@ -20,6 +21,6 @@ Route::group(['prefix' => 'api/finance/v1'], function () {
 Route::group(['prefix' => 'api/finance/v2'], function () {
     // Admin
     Route::group(['middleware' => ['auth:api']], function () {
-        Route::get('transaction', [MoneyTransactionController::class, 'indexV2']);
+        Route::get('transaction', [FinanceDashboardController::class, 'transactionListing']);
     });
 });
