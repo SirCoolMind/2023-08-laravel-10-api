@@ -26,6 +26,16 @@ class Kernel extends ConsoleKernel
             ->onSuccess(function () {
                 \Log::info('Command backup:clean success at '.\Carbon\Carbon::now()->toDateTimeString());
             });
+
+        if (\Artisan::hasCommand('finance-balance:daily')) {
+            $schedule->command('finance-balance:daily')->daily()->at('01:00')
+                ->onFailure(function () {
+                    \Log::error('Command finance-balance:daily failed at '.\Carbon\Carbon::now()->toDateTimeString());
+                })
+                ->onSuccess(function () {
+                    \Log::info('Command finance-balance:daily success at '.\Carbon\Carbon::now()->toDateTimeString());
+                });
+        }
     }
 
     /**

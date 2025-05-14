@@ -2,6 +2,7 @@
 
 namespace HafizRuslan\Finance;
 
+use HafizRuslan\Finance\app\Console\Commands\DispatchDailyBalanceJob;
 use Illuminate\Support\ServiceProvider;
 
 class FinanceServiceProvider extends ServiceProvider
@@ -14,5 +15,10 @@ class FinanceServiceProvider extends ServiceProvider
 
     public function register()
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                DispatchDailyBalanceJob::class,
+            ]);
+        }
     }
 }
