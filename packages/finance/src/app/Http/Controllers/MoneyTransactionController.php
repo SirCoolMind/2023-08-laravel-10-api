@@ -224,6 +224,11 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
             UploadedFile::store($record, MoneyTransaction::FileTypeTransactionImages, $request->file('transaction_images_upload'));
         }
 
+        \HafizRuslan\Finance\app\Jobs\ProcessAccountBalance::dispatch(
+            $record->money_account_id,
+            \Carbon\Carbon::parse($record->transaction_date)->toDateString()
+        );
+
         return $record;
     }
 
@@ -276,4 +281,43 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
             ], 422);
         }
     }
+
+    // Transfer logic if type equal to transfer
+    // DB::transaction(function () use ($data) {
+    //     $transfer = MoneyTransfer::create([
+    //         'source_account_id' => $data['source_account_id'],
+    //         'target_account_id' => $data['target_account_id'],
+    //         'amount' => $data['amount'],
+    //         'transaction_date' => $data['transaction_date'],
+    //         'user_id' => auth()->id(),
+    //     ]);
+
+    //     // Create source EXPENSE transaction
+    //     MoneyTransaction::create([
+    //         'money_account_id' => $transfer->source_account_id,
+    //         'type' => 'EXPENSE',
+    //         'amount' => $transfer->amount,
+    //         'transaction_date' => $transfer->transaction_date,
+    //         'money_transfer_id' => $transfer->id,
+    //         'user_id' => $transfer->user_id,
+    //     ]);
+
+    //     // Create target INCOME transaction
+    //     MoneyTransaction::create([
+    //         'money_account_id' => $transfer->target_account_id,
+    //         'type' => 'INCOME',
+    //         'amount' => $transfer->amount,
+    //         'transaction_date' => $transfer->transaction_date,
+    //         'money_transfer_id' => $transfer->id,
+    //         'user_id' => $transfer->user_id,
+    //     ]);
+    // });
+
+    // DB::transaction(function () use ($transfer) {
+    //     // Delete both linked transactions
+    //     $transfer->sourceTransaction?->delete();
+    //     $transfer->targetTransaction?->delete();
+
+    //     $transfer->delete();
+    // });
 }
