@@ -2,16 +2,12 @@
 
 namespace HafizRuslan\Finance\app\Models;
 
-use HafizRuslan\Finance\app\Enums\FinanceTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
-class MoneyTransaction extends Model
+class MoneyTransfer extends Model
 {
     use HasFactory;
-
-    const FileTypeTransactionImages = 'transaction_images';
 
     /**
      * The attributes that should be cast.
@@ -20,7 +16,6 @@ class MoneyTransaction extends Model
      */
     protected $casts = [
         'transaction_date' => 'datetime',
-        'type'             => FinanceTypeEnum::class,
     ];
 
     // Accessor for transaction_date
@@ -38,30 +33,24 @@ class MoneyTransaction extends Model
             ->format('Y-m-d');
     }
 
-    public function transactionImages()
+    public function sourceMoneyAccount()
     {
-        return $this->morphMany(UploadedFile::class, 'model')
-            ->where('type', self::FileTypeTransactionImages);
+        return $this->hasOne(MoneyAccount::class, 'id', 'source_account_id');
     }
 
-    public function moneyCategory()
+    public function targetMoneyAccount()
     {
-        return $this->hasOne(MoneyCategory::class, 'id', 'money_category_id');
+        return $this->hasOne(MoneyAccount::class, 'id', 'target_account_id');
     }
 
-    public function moneySubCategory()
+    public function sourceTransaction()
     {
-        return $this->hasOne(MoneySubCategory::class, 'id', 'money_subcategory_id');
+        return $this->hasOne(MoneyTransaction::class)->where('type', 'EXPENSE');
     }
 
-    public function moneyAccount()
+    public function targetTransaction()
     {
-        return $this->hasOne(MoneyAccount::class, 'id', 'money_account_id');
-    }
-
-    public function transfer()
-    {
-        return $this->belongsTo(MoneyTransfer::class, 'money_transfer_id');
+        return $this->hasOne(MoneyTransaction::class)->where('type', 'INCOME');
     }
 
     /**
