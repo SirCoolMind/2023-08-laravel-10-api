@@ -76,6 +76,9 @@ class FinanceDashboardController extends \App\Http\Controllers\Controller
         $records = MoneyBalance::with(['moneyAccount'])
             ->whereDate('transaction_date', $startDate)
             ->whereIn('money_account_id', $moneyAccounts)
+            ->join('money_accounts', 'money_balances.money_account_id', '=', 'money_accounts.id')
+            ->orderBy('money_accounts.name')
+            ->select('money_balances.*')
             ->get();
 
         return DashboardAccountBalanceResource::collection($records);
