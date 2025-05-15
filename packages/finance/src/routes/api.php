@@ -22,5 +22,6 @@ Route::group(['prefix' => 'api/finance/v2'], function () {
     // Admin
     Route::group(['middleware' => ['auth:api']], function () {
         Route::get('transaction', [FinanceDashboardController::class, 'transactionListing']);
+        Route::get('dashboard/account-balance', [FinanceDashboardController::class, 'accountBalanceListing']);
     });
 });

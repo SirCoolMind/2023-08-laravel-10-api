@@ -2,7 +2,10 @@
 
 namespace HafizRuslan\Finance\app\Http\Controllers;
 
+use HafizRuslan\Finance\app\Http\Resources\DashboardAccountBalanceResource;
 use HafizRuslan\Finance\app\Http\Resources\MoneyTransactionV2Resource;
+use HafizRuslan\Finance\app\Models\MoneyAccount;
+use HafizRuslan\Finance\app\Models\MoneyBalance;
 use HafizRuslan\Finance\app\Models\MoneyTransaction;
 
 class FinanceDashboardController extends \App\Http\Controllers\Controller
@@ -58,6 +61,24 @@ class FinanceDashboardController extends \App\Http\Controllers\Controller
                 'start_date'    => $startDate,
                 'end_date'      => $endDate,
             ]);
+    }
+
+    public function accountBalanceListing()
+    {
+        if ($return = $this->validateScope()) {
+            return $return;
+        }
+
+        $startDate = \Carbon\Carbon::now()->toDateString();
+
+        // * fetch
+        $moneyAccounts = MoneyAccount::where('user_id', \Auth::id())->get()->pluck('id')->toArray();
+        $records = MoneyBalance::with(['moneyAccount'])
+            ->whereDate('transaction_date', $startDate)
+            ->whereIn('money_account_id', $moneyAccounts)
+            ->get();
+
+        return DashboardAccountBalanceResource::collection($records);
     }
 
     private function withRelations($otherRelations = [])
