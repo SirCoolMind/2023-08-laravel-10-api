@@ -63,6 +63,14 @@ class FinanceDashboardController extends \App\Http\Controllers\Controller
             ]);
     }
 
+    /**
+     * Return account balance with status
+     *
+     * Status:
+     * 1 - okay
+     * 2 - no accounts created
+     * 3 - balance not yet generated
+     */
     public function accountBalanceListing()
     {
         if ($return = $this->validateScope()) {
@@ -81,7 +89,24 @@ class FinanceDashboardController extends \App\Http\Controllers\Controller
             ->select('money_balances.*')
             ->get();
 
-        return DashboardAccountBalanceResource::collection($records);
+        $countAccounts = count($moneyAccounts);
+        $hasNoBalance = $records->isEmpty();
+        if($countAccounts == 0) {
+            $userStatus = 2;
+            $userStatusDescription = "No accounts created";
+        } elseif($hasNoBalance) {
+            $userStatus = 3;
+            $userStatusDescription = "Balance not yet generated";
+        } else {
+            $userStatus = 1;
+            $userStatusDescription = "Okay";
+        }
+
+        return DashboardAccountBalanceResource::collection($records)
+            ->additional([
+                'user_status' => $userStatus,
+                'user_status_description' => $userStatusDescription,
+            ]);
     }
 
     private function withRelations($otherRelations = [])
