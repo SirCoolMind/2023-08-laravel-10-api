@@ -92,20 +92,20 @@ class FinanceDashboardController extends \App\Http\Controllers\Controller
         $countAccounts = count($moneyAccounts);
         $hasNoBalance = $records->isEmpty();
         if($countAccounts == 0) {
-            $userStatus = 2;
-            $userStatusDescription = "No accounts created";
+            $accountStatus = 2;
+            $accountStatusDescription = "No accounts created";
         } elseif($hasNoBalance) {
-            $userStatus = 3;
-            $userStatusDescription = "Balance not yet generated";
+            $accountStatus = 3;
+            $accountStatusDescription = "Balance not yet generated";
         } else {
-            $userStatus = 1;
-            $userStatusDescription = "Okay";
+            $accountStatus = 1;
+            $accountStatusDescription = false;
         }
 
         return DashboardAccountBalanceResource::collection($records)
             ->additional([
-                'user_status' => $userStatus,
-                'user_status_description' => $userStatusDescription,
+                'account_status' => $accountStatus,
+                'account_status_description' => $accountStatusDescription,
             ]);
     }
 
