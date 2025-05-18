@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
                 \Log::info('Command backup:clean success at '.\Carbon\Carbon::now()->toDateTimeString());
             });
 
-        if (\Artisan::hasCommand('finance-balance:daily')) {
+        if (array_key_exists('finance-balance:daily', \Artisan::all())) {
             $schedule->command('finance-balance:daily')->daily()->at('01:00')
                 ->onFailure(function () {
                     \Log::error('Command finance-balance:daily failed at '.\Carbon\Carbon::now()->toDateTimeString());
