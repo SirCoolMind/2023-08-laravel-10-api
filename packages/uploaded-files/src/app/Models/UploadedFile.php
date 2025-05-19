@@ -52,7 +52,7 @@ class UploadedFile extends Model
         foreach ($files as $file) {
             UploadedFile::handleFileUpload($model, $type, $file, $imageQualityCompress);
         }
-       
+
     }
 
     private static function handleFileUpload($model = null, $type = null, $file = null, $imageQualityCompress = 75)
@@ -128,7 +128,7 @@ class UploadedFile extends Model
         } catch (\Throwable $th) {
             \DB::rollback();
             \Log::error('UploadedFile::handleFileUpload() || error saving');
-            \Log::debug($th->getMessage());
+            \Log::error($th->getMessage());
 
             throw new \Exception('Error uploading file');
         }

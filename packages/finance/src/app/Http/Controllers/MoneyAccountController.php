@@ -93,8 +93,6 @@ class MoneyAccountController extends \App\Http\Controllers\Controller
 
     public function update(Request $request, $id)
     {
-        // \Log::debug($request->all());
-        \Log::debug($request->input('versions'));
         // dd();
         if ($return = $this->validateScope()) {
             return $return;

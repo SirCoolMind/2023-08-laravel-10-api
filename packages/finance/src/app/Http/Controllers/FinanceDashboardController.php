@@ -16,7 +16,6 @@ class FinanceDashboardController extends \App\Http\Controllers\Controller
             return $return;
         }
 
-        \Log::debug(request()->all());
         // * sort
         $sortBy = 'transaction_date';
         $descending = 'DESC';
@@ -25,12 +24,9 @@ class FinanceDashboardController extends \App\Http\Controllers\Controller
         $startDate = request()->input('filter.start_date');
         $endDate = request()->input('filter.end_date');
         if (!$startDate) {
-            \Log::debug("masuk sini");
             $startDate = \Carbon\Carbon::now()->startOfMonth();
             $endDate = $startDate->clone()->endOfMonth();
         }
-
-        \Log::debug($startDate);
 
         // * fetch
         $records = MoneyTransaction::with($this->withRelations())
