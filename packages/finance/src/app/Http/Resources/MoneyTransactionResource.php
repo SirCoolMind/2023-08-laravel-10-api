@@ -26,12 +26,13 @@ class MoneyTransactionResource extends JsonResource
 
         return [
             'id'                => $this->id,
-            'amount'            => number_format($this->amount / 100, 2, '.', ''),   
+            'amount'            => number_format($this->amount / 100, 2, '.', ''),
             'date'              => $this->getTransactionDateInYmd(),
             'transaction_date'  => $this->transaction_date,
             'description'       => $this->description,
             'category'          => $this->category,
             'sub_category'      => $this->sub_category,
+            'money_transfer_id' => $this->money_transfer_id,
             'money_category'    => new MoneyCategoryResource($this->whenLoaded('moneyCategory')),
             'money_subcategory' => new MoneySubCategoryResource($this->whenLoaded('moneySubCategory')),
             'money_account'     => new MoneyAccountResource($this->whenLoaded('moneyAccount')),

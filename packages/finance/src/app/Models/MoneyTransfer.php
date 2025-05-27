@@ -4,10 +4,13 @@ namespace HafizRuslan\Finance\app\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
 class MoneyTransfer extends Model
 {
     use HasFactory;
+
+    const FileTypeTransactionImages = 'transaction_images';
 
     /**
      * The attributes that should be cast.
@@ -31,6 +34,12 @@ class MoneyTransfer extends Model
         return \Carbon\Carbon::parse($this->attributes['transaction_date'])
             // ->utc() // no need utc because not enough data for front end to declare utc or not
             ->format('Y-m-d');
+    }
+
+    public function transactionImages()
+    {
+        return $this->morphMany(UploadedFile::class, 'model')
+            ->where('type', self::FileTypeTransactionImages);
     }
 
     public function sourceMoneyAccount()
