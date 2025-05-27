@@ -135,7 +135,7 @@ class KpopEraVersionController extends \App\Http\Controllers\Controller
         }
 
         return response()->json([
-            'message' => __('Record successfully created.'),
+            'message' => __('Record successfully updated.'),
             'data'    => new KpopEraVersionResource($record),
         ]);
     }
