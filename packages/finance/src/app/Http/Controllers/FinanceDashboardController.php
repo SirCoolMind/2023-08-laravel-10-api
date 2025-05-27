@@ -89,10 +89,10 @@ class FinanceDashboardController extends \App\Http\Controllers\Controller
         $hasNoBalance = $records->isEmpty();
         if($countAccounts == 0) {
             $accountStatus = 2;
-            $accountStatusDescription = "No accounts created";
+            $accountStatusDescription = __("No accounts created");
         } elseif($hasNoBalance) {
             $accountStatus = 3;
-            $accountStatusDescription = "Balance not yet generated";
+            $accountStatusDescription = __("Balance not yet generated for today");
         } else {
             $accountStatus = 1;
             $accountStatusDescription = false;
