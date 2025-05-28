@@ -4,6 +4,7 @@ namespace SirCoolMind\UploadedFiles\app\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Intervention\Image\Drivers\Gd\Encoders\JpegEncoder;
 use Intervention\Image\Drivers\Gd\Encoders\PngEncoder;
 use Intervention\Image\Drivers\Gd\Encoders\WebpEncoder;
@@ -36,23 +37,93 @@ class UploadedFile extends Model
         return \URL::signedRoute('files.download', ['id' => $this->id, 'filename' => $this->safe_filename], now()->addHour());
     }
 
-    // TODO:: create a helper class for store/retrieve/delete
-    public static function store($model = null, $type = null, $files = null, $imageQualityCompress = 75)
+    /**
+     * Store uploaded file(s) and associate them with a given model.
+     *
+     * This method accepts a single file or an array of files, optionally compresses image quality,
+     * and delegates file handling to the handleFileUpload() method.
+     *
+     * If the model or files are missing, the method logs an error and returns early.
+     *
+     * @param Model|null                        $model               The model to associate the uploaded file(s) with.
+     * @param string|null                       $type                A type or category identifier for the file(s), e.g. image, document, etc.
+     * @param UploadedFile|UploadedFile[]|null  $files               A single UploadedFile instance or an array of them.
+     * @param int                               $imageQualityCompress Image compression quality (1–100) for images. Default is 75.
+     *
+     * @return void
+     */
+    public static function store(?Model $model = null, ?string $type = null, UploadedFile|array|null $files = null, int $imageQualityCompress = 75)
     {
         if (!$files || !$model) {
             \Log::error('UploadedFile::store() || Files or model is missing');
-
             return;
         }
 
-        if (!is_array($files)) {
-            $files = [$files];
-        }
-
+        $files = is_array($files) ? $files : [$files];
         foreach ($files as $file) {
-            UploadedFile::handleFileUpload($model, $type, $file, $imageQualityCompress);
+            self::handleFileUpload($model, $type, $file, $imageQualityCompress);
+        }
+    }
+
+    /**
+     * Sync files based on existingFiles input.
+     *
+     * @param Collection $uploadedFiles Collection of uploaded file models
+     * @param array|null $existingFiles Input from the request
+     */
+    public static function syncFiles(Collection $uploadedFiles, ?array $existingFiles = null): void
+    {
+        if (empty($existingFiles)) {
+            foreach ($uploadedFiles as $uploadedFile) {
+                \Storage::disk('public')->delete($uploadedFile->path);
+                $uploadedFile->delete();
+            }
+            return;
         }
 
+        $existingFiles = collect($existingFiles)->filter(function ($image) {
+            return $image['is_available'] === 'true';
+        });
+
+        foreach ($uploadedFiles as $uploadedFile) {
+            $match = $existingFiles->first(function ($image) use ($uploadedFile) {
+                return $image['id'] == $uploadedFile->id &&
+                       $image['filename'] === $uploadedFile->original_filename;
+            });
+
+            if (!$match) {
+                \Storage::disk('public')->delete($uploadedFile->path);
+                $uploadedFile->delete();
+            }
+        }
+    }
+
+    /**
+     * Delete a single uploaded file from the storage disk and database.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $uploadedFile
+     *        An Eloquent model instance representing the uploaded file. Must have a `path` attribute.
+     *
+     * @return void
+     *
+     * @throws \Exception If the provided model is invalid or deletion fails.
+     */
+    public static function deleteFile($uploadedFile): bool
+    {
+        if (!$uploadedFile || !isset($uploadedFile->path)) {
+            \Log::warning('FileHelper::deleteFile() called with invalid file model.');
+
+            throw new \Exception('called with invalid file model');
+        }
+
+        try {
+            \Storage::disk('public')->delete($uploadedFile->path);
+            $uploadedFile->delete();
+        } catch (\Throwable $e) {
+            \Log::error('FileHelper::deleteFile() error: ' . $e->getMessage());
+
+            throw new \Exception($e->getMessage());
+        }
     }
 
     private static function handleFileUpload($model = null, $type = null, $file = null, $imageQualityCompress = 75)
