@@ -228,8 +228,7 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
             $sourceTransaction = new MoneyTransaction();
 
         $listOfAccountId[] = $record->source_account_id;
-        if($sourceTransaction->money_account_id != $record->source_account_id)
-            $listOfAccountId[] = $sourceTransaction->money_account_id;
+        $listOfAccountId[] = $sourceTransaction->money_account_id; //store previous account
 
         $transferCategory = $this->retrieveTransferCategory(FinanceTypeEnum::EXPENSE, $record->user_id);
         $sourceTransaction->money_category_id = $transferCategory->id;
@@ -247,8 +246,7 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
             $targetTransaction = new MoneyTransaction();
 
         $listOfAccountId[] = $record->target_account_id;
-        if($targetTransaction->money_account_id != $record->target_account_id)
-            $listOfAccountId[] = $targetTransaction->money_account_id;
+        $listOfAccountId[] = $targetTransaction->money_account_id; //store previous account
 
         $transferCategory = $this->retrieveTransferCategory(FinanceTypeEnum::INCOME, $record->user_id);
         $targetTransaction->money_category_id = $transferCategory->id;
@@ -262,7 +260,7 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
         $targetTransaction->save();
 
         // Process balance recalculation
-        $listOfAccountId = array_unique($listOfAccountId);
+        $listOfAccountId = array_unique(array_filter($listOfAccountId));
         $transactionDate = \Carbon\Carbon::parse($record->transaction_date)->toDateString();
         \DB::afterCommit(function () use ($listOfAccountId, $transactionDate) {
             foreach($listOfAccountId as $accountId) {
