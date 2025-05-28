@@ -24,13 +24,13 @@ class MoneyTransactionV2Resource extends JsonResource
                 'name' => $this->type?->label(),
             ],
             'money_account' => $this->whenLoaded('moneyAccount', function () {
-                return $this->moneySubCategory->only(['name']);
+                return $this->moneyAccount->only(['name']);
             }),
             'money_category' => $this->whenLoaded('moneyCategory', function () {
-                return $this->moneyCategory->only(['name']);
+                return $this->moneyCategory?->only(['name']);
             }),
             'money_subcategory' => $this->whenLoaded('moneySubCategory', function () {
-                return $this->moneySubCategory->only(['name']);
+                return $this->moneySubCategory?->only(['name']);
             }),
         ];
     }
