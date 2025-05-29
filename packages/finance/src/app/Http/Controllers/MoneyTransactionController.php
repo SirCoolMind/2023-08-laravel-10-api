@@ -186,7 +186,10 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         $record->money_account_id = $request->input('money_account.id');
         $record->type = $request->input('type.id');
 
-        // TODO : should have user_id tied to money transaction
+        if (empty($record->user_id)) {
+            $record->user_id = \Auth::id();
+        }
+
         $record->save();
 
         $existingImages = $request->input('transaction_images');
