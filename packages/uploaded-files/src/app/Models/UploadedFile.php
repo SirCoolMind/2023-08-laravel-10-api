@@ -92,8 +92,7 @@ class UploadedFile extends Model
             });
 
             if (!$match) {
-                \Storage::disk('public')->delete($uploadedFile->path);
-                $uploadedFile->delete();
+                self::deleteFile($uploadedFile);
             }
         }
     }
