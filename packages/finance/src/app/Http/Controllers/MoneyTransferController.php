@@ -174,10 +174,10 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
             \DB::beginTransaction();
 
             // Process balance recalculation
-            $listOfAccountId = [
+            $listOfAccountId = array_unique(array_filter([
                 $record->source_account_id,
                 $record->target_account_id,
-            ];
+            ]));
             $transactionDate = \Carbon\Carbon::parse($record->transaction_date)->toDateString();
             \DB::afterCommit(function () use ($listOfAccountId, $transactionDate) {
                 foreach($listOfAccountId as $accountId) {
@@ -222,13 +222,9 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
 
     private function setTransactionItem(MoneyTransfer $record)
     {
-        $listOfAccountId = []; // list of account id to be process on account balance
         $sourceTransaction = $record->sourceTransaction;
         if(!$sourceTransaction)
             $sourceTransaction = new MoneyTransaction();
-
-        $listOfAccountId[] = $record->source_account_id;
-        $listOfAccountId[] = $sourceTransaction->money_account_id; //store previous account
 
         $transferCategory = $this->retrieveTransferCategory(FinanceTypeEnum::EXPENSE, $record->user_id);
         $sourceTransaction->money_category_id = $transferCategory->id;
@@ -245,9 +241,6 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
         if(!$targetTransaction)
             $targetTransaction = new MoneyTransaction();
 
-        $listOfAccountId[] = $record->target_account_id;
-        $listOfAccountId[] = $targetTransaction->money_account_id; //store previous account
-
         $transferCategory = $this->retrieveTransferCategory(FinanceTypeEnum::INCOME, $record->user_id);
         $targetTransaction->money_category_id = $transferCategory->id;
         $targetTransaction->type = FinanceTypeEnum::INCOME;
@@ -260,7 +253,12 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
         $targetTransaction->save();
 
         // Process balance recalculation
-        $listOfAccountId = array_unique(array_filter($listOfAccountId));
+        $listOfAccountId = array_unique(array_filter([
+            $sourceTransaction->getOriginal('money_account_id'),
+            $sourceTransaction->money_account_id,
+            $targetTransaction->getOriginal('money_account_id'),
+            $targetTransaction->money_account_id,
+        ]));
         $transactionDate = \Carbon\Carbon::parse($record->transaction_date)->toDateString();
         \DB::afterCommit(function () use ($listOfAccountId, $transactionDate) {
             foreach($listOfAccountId as $accountId) {

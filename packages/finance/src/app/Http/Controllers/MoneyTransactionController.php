@@ -227,10 +227,24 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
             UploadedFile::store($record, MoneyTransaction::FileTypeTransactionImages, $request->file('transaction_images_upload'));
         }
 
-        \HafizRuslan\Finance\app\Jobs\ProcessAccountBalance::dispatch(
+        // Process balance recalculation
+        $listOfAccountId = array_unique(array_filter([
+            $record->getOriginal('money_account_id'),
             $record->money_account_id,
-            \Carbon\Carbon::parse($record->transaction_date)->toDateString()
-        );
+        ]));
+
+        $originalDate = \CarbonCarbon::parse($record->getOriginal('transaction_date'));
+        $recordDate = \CarbonCarbon::parse($record->transaction_date);
+        $transactionDate = $originalDate->lessThan($recordDate) ? $originalDate : $recordDate;
+        $transactionDate = $transactionDate->toDateString();
+        \DB::afterCommit(function () use ($listOfAccountId, $transactionDate) {
+            foreach($listOfAccountId as $accountId) {
+                \HafizRuslan\Finance\app\Jobs\ProcessAccountBalance::dispatch(
+                    $accountId,
+                    $transactionDate
+                );
+            }
+        });
 
         return $record;
     }
