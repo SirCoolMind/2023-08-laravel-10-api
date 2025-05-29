@@ -45,14 +45,14 @@ class UploadedFile extends Model
      *
      * If the model or files are missing, the method logs an error and returns early.
      *
-     * @param Model|null                        $model               The model to associate the uploaded file(s) with.
-     * @param string|null                       $type                A type or category identifier for the file(s), e.g. image, document, etc.
-     * @param UploadedFile|UploadedFile[]|null  $files               A single UploadedFile instance or an array of them.
-     * @param int                               $imageQualityCompress Image compression quality (1–100) for images. Default is 75.
+     * @param Model|null                                         $model The model to associate the uploaded file(s) with.
+     * @param string|null                                        $type  A type or category identifier for the file(s), e.g. image, document, etc.
+     * @param \Illuminate\Http\UploadedFile|UploadedFile[]|null  $files A single UploadedFile instance or an array of them.
+     * @param int                                                $imageQualityCompress Image compression quality (1–100) for images. Default is 75.
      *
      * @return void
      */
-    public static function store(?Model $model = null, ?string $type = null, UploadedFile|array|null $files = null, int $imageQualityCompress = 75)
+    public static function store(?Model $model = null, ?string $type = null, \Illuminate\Http\UploadedFile|array|null $files = null, int $imageQualityCompress = 75)
     {
         if (!$files || !$model) {
             \Log::error('UploadedFile::store() || Files or model is missing');
@@ -107,7 +107,7 @@ class UploadedFile extends Model
      *
      * @throws \Exception If the provided model is invalid or deletion fails.
      */
-    public static function deleteFile($uploadedFile): bool
+    public static function deleteFile($uploadedFile)
     {
         if (!$uploadedFile || !isset($uploadedFile->path)) {
             \Log::warning('FileHelper::deleteFile() called with invalid file model.');
