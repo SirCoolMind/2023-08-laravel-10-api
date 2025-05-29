@@ -6,7 +6,6 @@ use HafizRuslan\Finance\app\Enums\FinanceTypeEnum;
 use HafizRuslan\Finance\app\Http\Resources\MoneyTransactionResource;
 use HafizRuslan\Finance\app\Models\MoneyTransaction;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Enum;
 use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
@@ -179,8 +178,6 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         $record->amount = preg_replace('/[,.]/', '', $request->input('amount'));
         $record->transaction_date = \Carbon\Carbon::parse($request->input('transaction_date'))->setTimezone(config('app.timezone'));
         $record->description = $request->input('description');
-        // $record->category = $request->input('category');
-        // $record->sub_category = $request->input('sub_category');
         $record->money_category_id = $request->input('money_category.id');
         $record->money_subcategory_id = $request->input('money_subcategory.id');
         $record->money_account_id = $request->input('money_account.id');
@@ -192,36 +189,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
 
         $record->save();
 
-        $existingImages = $request->input('transaction_images');
-        // If existingImages is empty, delete all files related to the model
-        if (empty($existingImages)) {
-            foreach ($record->transactionImages as $uploadedFile) {
-                Storage::disk('public')->delete($uploadedFile->path);
-                $uploadedFile->delete();
-            }
-        } else {
-            // If existingImages is not empty, check which files to delete
-            foreach ($record->transactionImages as $uploadedFile) {
-                $shouldDelete = true;
-                // \Log::debug("file");
-                // \Log::debug($uploadedFile);
-                foreach ($existingImages as $image) {
-                    // \Log::debug($image);
-                    if ($image['id'] == $uploadedFile->id
-                        && $image['filename'] == $uploadedFile->original_filename
-                        && $image['is_available'] == 'true'
-                    ) {
-                        $shouldDelete = false;
-                        break;
-                    }
-                }
-
-                if ($shouldDelete) {
-                    Storage::disk('public')->delete($uploadedFile->path);
-                    $uploadedFile->delete();
-                }
-            }
-        }
+        UploadedFile::syncFiles($record->transactionImages, $request->input('transaction_images'));
 
         if ($request->hasFile('transaction_images_upload')) {
             UploadedFile::store($record, MoneyTransaction::FileTypeTransactionImages, $request->file('transaction_images_upload'));
@@ -233,8 +201,8 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
             $record->money_account_id,
         ]));
 
-        $originalDate = \CarbonCarbon::parse($record->getOriginal('transaction_date'));
-        $recordDate = \CarbonCarbon::parse($record->transaction_date);
+        $originalDate = \Carbon\Carbon::parse($record->getOriginal('transaction_date'));
+        $recordDate = \Carbon\Carbon::parse($record->transaction_date);
         $transactionDate = $originalDate->lessThan($recordDate) ? $originalDate : $recordDate;
         $transactionDate = $transactionDate->toDateString();
         \DB::afterCommit(function () use ($listOfAccountId, $transactionDate) {
@@ -270,7 +238,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
             // 'sub_category'     => ['required'],
             'money_account.id'        => ['required'],
             'money_category.id'       => ['required'],
-            'money_subcategory.id'    => ['required'],
+            // 'money_subcategory.id'    => ['required'],
             'type.id'                 => ['required', new Enum(FinanceTypeEnum::class)],
         ];
         $rules = array_merge($rules, $otherRules);
