@@ -67,6 +67,8 @@ class UploadedFile extends Model
 
     /**
      * Sync files based on existingFiles input.
+     * If file exists in system but not in request, remove it.
+     * If nothing inside request, remove all
      *
      * @param Collection $uploadedFiles Collection of uploaded file models
      * @param array|null $existingFiles Input from the request
