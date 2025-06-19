@@ -190,36 +190,7 @@ class KpopItemController extends \App\Http\Controllers\Controller
 
         $record->save();
 
-        $existingImages = $request->input('photocard_image');
-        // If existingImages is empty, delete all files related to the model
-        if (empty($existingImages)) {
-            foreach ($record->photocardImages as $uploadedFile) {
-                Storage::disk('public')->delete($uploadedFile->path);
-                $uploadedFile->delete();
-            }
-        } else {
-            // If existingImages is not empty, check which files to delete
-            foreach ($record->photocardImages as $uploadedFile) {
-                $shouldDelete = true;
-                // \Log::debug("file");
-                // \Log::debug($uploadedFile);
-                foreach ($existingImages as $image) {
-                    // \Log::debug($image);
-                    if ($image['id'] == $uploadedFile->id
-                        && $image['filename'] == $uploadedFile->original_filename
-                        && $image['is_available'] == 'true'
-                    ) {
-                        $shouldDelete = false;
-                        break;
-                    }
-                }
-
-                if ($shouldDelete) {
-                    Storage::disk('public')->delete($uploadedFile->path);
-                    $uploadedFile->delete();
-                }
-            }
-        }
+        UploadedFile::syncFiles($record->photocardImages, $request->input('photocard_image'));
 
         if ($request->hasFile('photocard_image_upload')) {
             UploadedFile::store($record, KpopItem::FileTypePhotocardImage, $request->file('photocard_image_upload'), $imageQualityCompress = 40);

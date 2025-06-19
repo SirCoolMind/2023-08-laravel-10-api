@@ -43,37 +43,8 @@ class UserSettingAccountController extends Controller
                 'email'    => $request->email,
             ]);
 
-            $existingImages = $request->input('profile_image');
-            // If existingImages is empty, delete all files related to the model
-            if (empty($existingImages)) {
-                foreach ($user->profileImages as $uploadedFile) {
-                    Storage::disk('public')->delete($uploadedFile->path);
-                    $uploadedFile->delete();
-                }
-            } else {
-                // If existingImages is not empty, check which files to delete
-                foreach ($user->profileImages as $uploadedFile) {
-                    $shouldDelete = true;
-                    // \Log::debug("file");
-                    // \Log::debug($uploadedFile);
-                    foreach ($existingImages as $image) {
-                        // \Log::debug($image);
-                        if ($image['id'] == $uploadedFile->id
-                            && $image['filename'] == $uploadedFile->original_filename
-                            && $image['is_available'] == 'true'
-                        ) {
-                            $shouldDelete = false;
-                            break;
-                        }
-                    }
-    
-                    if ($shouldDelete) {
-                        Storage::disk('public')->delete($uploadedFile->path);
-                        $uploadedFile->delete();
-                    }
-                }
-            }
-    
+            UploadedFile::syncFiles($user->profileImages, $request->input('profile_image'));
+
             if ($request->hasFile('profile_image_upload')) {
                 //Resize profile image to 120x120
                 $file = $request->file('profile_image_upload.0');
