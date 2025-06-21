@@ -46,26 +46,7 @@ class UserSettingAccountController extends Controller
             UploadedFile::syncFiles($user->profileImages, $request->input('profile_image'));
 
             if ($request->hasFile('profile_image_upload')) {
-                //Resize profile image to 120x120
-                $file = $request->file('profile_image_upload.0');
-                $filePath = $file->getPathname();
-                $image = ImageManager::imagick()->read($filePath)->cover(120, 120);
-                
-                $tempPath = sys_get_temp_dir() . '/' . \Str::uuid() . '.' . $file->getClientOriginalExtension();
-                $image->save($tempPath, 100);
-
-                $resizedFile = new \Illuminate\Http\UploadedFile(
-                    $tempPath,
-                    $file->getClientOriginalName(),
-                    $file->getClientMimeType(),
-                    0, // Error status (0 means no error)
-                    true // Test mode (prevents moving the file)
-                );
-
-                UploadedFile::store($user, User::FileTypeProfileImage, $resizedFile, $imageQualityCompress = 90);
-
-                // 🔥 Delete the temp file after storing
-                unlink($tempPath);
+                UploadedFile::store($user, User::FileTypeProfileImage, $resizedFile, $targetSize = [120,120], $imageQualityCompress = 90);
             }
 
             $user->refresh();

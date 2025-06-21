@@ -193,7 +193,7 @@ class KpopItemController extends \App\Http\Controllers\Controller
         UploadedFile::syncFiles($record->photocardImages, $request->input('photocard_image'));
 
         if ($request->hasFile('photocard_image_upload')) {
-            UploadedFile::store($record, KpopItem::FileTypePhotocardImage, $request->file('photocard_image_upload'), $imageQualityCompress = 40);
+            UploadedFile::store($record, KpopItem::FileTypePhotocardImage, $request->file('photocard_image_upload'), null, $imageQualityCompress = 40);
         }
 
         return $record;
@@ -216,7 +216,7 @@ class KpopItemController extends \App\Http\Controllers\Controller
             // 'version_name' => ['required'],
             'kpop_era_id'            => ['required'],
             'kpop_era_version_id'    => ['required'],
-            'photocard_image_upload' => ['nullable', 'file', 'image', 'max:2048'],
+            'photocard_image_upload' => ['nullable', 'file', 'image', 'max:4000'],
         ];
         $rules = array_merge($rules, $otherRules);
 
