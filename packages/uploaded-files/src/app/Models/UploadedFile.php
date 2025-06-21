@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Intervention\Image\Drivers\Gd\Encoders\JpegEncoder;
 use Intervention\Image\Drivers\Gd\Encoders\PngEncoder;
 use Intervention\Image\Drivers\Gd\Encoders\WebpEncoder;
+use Intervention\Image\ImageManager;
 use Intervention\Image\Laravel\Facades\Image;
 
 class UploadedFile extends Model
@@ -48,20 +49,32 @@ class UploadedFile extends Model
      * @param Model|null                                         $model The model to associate the uploaded file(s) with.
      * @param string|null                                        $type  A type or category identifier for the file(s), e.g. image, document, etc.
      * @param \Illuminate\Http\UploadedFile|UploadedFile[]|null  $files A single UploadedFile instance or an array of them.
+     * @param array|null                                         $resizeTarget Resize image size ([120,120])
      * @param int                                                $imageQualityCompress Image compression quality (1–100) for images. Default is 75.
      *
      * @return void
      */
-    public static function store(?Model $model = null, ?string $type = null, \Illuminate\Http\UploadedFile|array|null $files = null, int $imageQualityCompress = 75)
+    public static function store(?Model $model = null, ?string $type = null, \Illuminate\Http\UploadedFile|array|null $files = null, ?array $resizeTarget = null, int $imageQualityCompress = 75)
     {
         if (!$files || !$model) {
             \Log::error('UploadedFile::store() || Files or model is missing');
             return;
         }
 
+        $resizeTarget = self::validateResizeTarget($resizeTarget);
         $files = is_array($files) ? $files : [$files];
         foreach ($files as $file) {
+            // Resize if not null and it is image file
+            if ( $resizeTarget && \Str::startsWith($file->getMimeType(), 'image/') ) {
+                $file = self::resizeImage($file, $resizeTarget[0], $resizeTarget[1], $imageQualityCompress);
+            }
+
             self::handleFileUpload($model, $type, $file, $imageQualityCompress);
+
+            // Clean up temp file
+            if (!is_null($resizeTarget) && file_exists($file->getPathname())) {
+                @unlink($file->getPathname());
+            }
         }
     }
 
@@ -160,7 +173,7 @@ class UploadedFile extends Model
             $filePath = str_replace('\\', '/', $filePath); // cleanup any backslash to slash
 
             // Check if the file is an image
-            if (str_starts_with($file->getMimeType(), 'image/')) {
+            if (\Str::startsWith($file->getMimeType(), 'image/')) {
                 // Resize & compress image
                 $image = Image::read($file);
 
@@ -204,6 +217,41 @@ class UploadedFile extends Model
 
             throw new \Exception('Error uploading file');
         }
+    }
+
+    private static function resizeImage(\Illuminate\Http\UploadedFile $file, int $width, int $height): \Illuminate\Http\UploadedFile
+    {
+        $image = ImageManager::imagick()
+            ->read($file->getPathname())
+            ->cover($width, $height);
+
+        $tempPath = sys_get_temp_dir() . '/' . \Str::uuid() . '.' . $file->getClientOriginalExtension();
+        $image->save($tempPath, $quality = 100);
+
+        return new \Illuminate\Http\UploadedFile(
+            $tempPath,
+            $file->getClientOriginalName(),
+            $file->getClientMimeType(),
+            0,
+            true
+        );
+    }
+
+    protected static function validateResizeTarget(?array $targetSize): ?array
+    {
+        if (
+            is_array($targetSize) &&
+            count($targetSize) === 2 &&
+            is_int($targetSize[0]) &&
+            is_int($targetSize[1]) &&
+            $targetSize[0] > 0 &&
+            $targetSize[1] > 0
+        ) {
+            return $targetSize;
+        }
+
+        // Invalid size = skip resize, no error thrown
+        return null;
     }
 
     private static function makeUrlSafe($string)
