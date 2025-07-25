@@ -21,10 +21,10 @@ class UserDataResource extends JsonResource
             'name'           => $this->name,
             'fullName'       => $this->name,
             'avatar'         => $avatar,
-            'role'           => "basic",
+            'role'           => 'basic',
             'abilityRules'   => [
                 [
-                    'action' => 'manage',
+                    'action'  => 'manage',
                     'subject' => 'all',
                 ],
             ],

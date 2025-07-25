@@ -24,7 +24,7 @@ class UpdateUserSettingRequest extends FormRequest
         return [
             'name'     => ['required', 'string', 'max:255'],
             // 'email'    => ['required', 'string', 'max:255', 'unique:use
-            'profile_image_upload' => ['nullable', 'array'],
+            'profile_image_upload'   => ['nullable', 'array'],
             'profile_image_upload.*' => ['file', 'image', 'max:2048'],
         ];
     }

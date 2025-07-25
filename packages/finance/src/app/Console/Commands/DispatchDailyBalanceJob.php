@@ -1,10 +1,10 @@
 <?php
+
 namespace HafizRuslan\Finance\app\Console\Commands;
 
-use Illuminate\Console\Command;
-use Carbon\Carbon;
 use HafizRuslan\Finance\app\Jobs\ProcessAccountBalance;
 use HafizRuslan\Finance\app\Models\MoneyAccount;
+use Illuminate\Console\Command;
 
 class DispatchDailyBalanceJob extends Command
 {

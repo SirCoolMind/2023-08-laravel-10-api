@@ -46,11 +46,11 @@ class UploadedFile extends Model
      *
      * If the model or files are missing, the method logs an error and returns early.
      *
-     * @param Model|null                                         $model The model to associate the uploaded file(s) with.
-     * @param string|null                                        $type  A type or category identifier for the file(s), e.g. image, document, etc.
-     * @param \Illuminate\Http\UploadedFile|UploadedFile[]|null  $files A single UploadedFile instance or an array of them.
-     * @param array|null                                         $resizeTarget Resize image size ([120,120])
-     * @param int                                                $imageQualityCompress Image compression quality (1–100) for images. Default is 75.
+     * @param Model|null                                        $model                The model to associate the uploaded file(s) with.
+     * @param string|null                                       $type                 A type or category identifier for the file(s), e.g. image, document, etc.
+     * @param \Illuminate\Http\UploadedFile|UploadedFile[]|null $files                A single UploadedFile instance or an array of them.
+     * @param array|null                                        $resizeTarget         Resize image size ([120,120])
+     * @param int                                               $imageQualityCompress Image compression quality (1–100) for images. Default is 75.
      *
      * @return void
      */
@@ -58,6 +58,7 @@ class UploadedFile extends Model
     {
         if (!$files || !$model) {
             \Log::error('UploadedFile::store() || Files or model is missing');
+
             return;
         }
 
@@ -65,7 +66,7 @@ class UploadedFile extends Model
         $files = is_array($files) ? $files : [$files];
         foreach ($files as $file) {
             // Resize if not null and it is image file
-            if ( $resizeTarget && \Str::startsWith($file->getMimeType(), 'image/') ) {
+            if ($resizeTarget && \Str::startsWith($file->getMimeType(), 'image/')) {
                 $file = self::resizeImage($file, $resizeTarget[0], $resizeTarget[1], $imageQualityCompress);
             }
 
@@ -81,7 +82,7 @@ class UploadedFile extends Model
     /**
      * Sync files based on existingFiles input.
      * If file exists in system but not in request, remove it.
-     * If nothing inside request, remove all
+     * If nothing inside request, remove all.
      *
      * @param Collection $uploadedFiles Collection of uploaded file models
      * @param array|null $existingFiles Input from the request
@@ -93,6 +94,7 @@ class UploadedFile extends Model
                 \Storage::disk('public')->delete($uploadedFile->path);
                 $uploadedFile->delete();
             }
+
             return;
         }
 
@@ -116,11 +118,11 @@ class UploadedFile extends Model
      * Delete a single uploaded file from the storage disk and database.
      *
      * @param \Illuminate\Database\Eloquent\Model $uploadedFile
-     *        An Eloquent model instance representing the uploaded file. Must have a `path` attribute.
-     *
-     * @return void
+     *                                                          An Eloquent model instance representing the uploaded file. Must have a `path` attribute.
      *
      * @throws \Exception If the provided model is invalid or deletion fails.
+     *
+     * @return void
      */
     public static function deleteFile($uploadedFile)
     {
@@ -134,7 +136,7 @@ class UploadedFile extends Model
             \Storage::disk('public')->delete($uploadedFile->path);
             $uploadedFile->delete();
         } catch (\Throwable $e) {
-            \Log::error('FileHelper::deleteFile() error: ' . $e->getMessage());
+            \Log::error('FileHelper::deleteFile() error: '.$e->getMessage());
 
             throw new \Exception($e->getMessage());
         }
@@ -145,19 +147,19 @@ class UploadedFile extends Model
         if (!$file) {
             \Log::error('UploadedFile::handleFileUpload() || File is missing');
 
-            throw new \Exception("File is missing");
+            throw new \Exception('File is missing');
         }
 
         if ($file->getSize() >= self::FILE_SIZE_LIMIT) {
             \Log::error('UploadedFile::handleFileUpload() || File is larger than 5MB');
 
-            throw new \Exception("File is larger than 5MB");
+            throw new \Exception('File is larger than 5MB');
         }
 
         if (!$model) {
             \Log::error('UploadedFile::handleFileUpload() || Model is missing');
 
-            throw new \Exception("Model is missing");
+            throw new \Exception('Model is missing');
         }
 
         try {
@@ -203,7 +205,7 @@ class UploadedFile extends Model
             $upload->original_filename = $file->getClientOriginalName();
             $upload->extension = strtolower($file->getClientOriginalExtension());
             $safeFilename = $upload::makeUrlSafe(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
-            $upload->safe_filename = $safeFilename.".".$upload->extension;
+            $upload->safe_filename = $safeFilename.'.'.$upload->extension;
             $upload->path = $filePath;
             $upload->size = $file->getSize();
 
@@ -225,7 +227,7 @@ class UploadedFile extends Model
             ->read($file->getPathname())
             ->cover($width, $height);
 
-        $tempPath = sys_get_temp_dir() . '/' . \Str::uuid() . '.' . $file->getClientOriginalExtension();
+        $tempPath = sys_get_temp_dir().'/'.\Str::uuid().'.'.$file->getClientOriginalExtension();
         $image->save($tempPath, $quality = 100);
 
         return new \Illuminate\Http\UploadedFile(

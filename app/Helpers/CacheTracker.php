@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helpers;
 
 use Illuminate\Support\Facades\Cache;
@@ -6,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 class CacheTracker
 {
     /**
-     * Cache tracking key based on user id
+     * Cache tracking key based on user id.
      */
     public static function track(string $listKey, string $cacheKey, int $ttlInHours = 24): void
     {

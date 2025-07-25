@@ -166,7 +166,7 @@ class LookupController extends \App\Http\Controllers\Controller
     public function getAccounts()
     {
         // Cache money_accounts for 24 hours
-        $cacheKey = "money_accounts_".\Auth::id();
+        $cacheKey = 'money_accounts_'.\Auth::id();
         $accounts = \Cache::remember($cacheKey, 86400, function () {
             return MoneyAccount::query()
                 ->where('user_id', \Auth::id())

@@ -5,7 +5,6 @@ namespace HafizRuslan\KpopCollection\app\Http\Controllers;
 use HafizRuslan\KpopCollection\app\Http\Resources\KpopItemResource;
 use HafizRuslan\KpopCollection\app\Models\KpopItem;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
 class KpopItemController extends \App\Http\Controllers\Controller
@@ -46,12 +45,13 @@ class KpopItemController extends \App\Http\Controllers\Controller
         // Search filter
         $search = request()->input('q');
         if ($search) {
-            $query->where(function($subQuery) use($search) {
+            $query->where(function ($subQuery) use ($search) {
                 $subQuery->where('kpop_items.artist_name', 'like', "%$search%");
             });
         }
 
         $record = $query->paginate(request()->input('rows_per_page'));
+
         return KpopItemResource::collection($record);
     }
 

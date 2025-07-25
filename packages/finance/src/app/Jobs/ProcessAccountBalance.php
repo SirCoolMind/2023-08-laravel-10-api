@@ -1,10 +1,11 @@
 <?php
+
 namespace HafizRuslan\Finance\app\Jobs;
 
 use HafizRuslan\Finance\app\Enums\FinanceTypeEnum;
 use HafizRuslan\Finance\app\Models\MoneyAccount;
-use HafizRuslan\Finance\app\Models\MoneyTransaction;
 use HafizRuslan\Finance\app\Models\MoneyBalance;
+use HafizRuslan\Finance\app\Models\MoneyTransaction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,7 +15,10 @@ use Illuminate\Support\Carbon;
 
 class ProcessAccountBalance implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected int $accountId;
     protected Carbon $startDate;
@@ -27,9 +31,9 @@ class ProcessAccountBalance implements ShouldQueue
 
     public function handle(): void
     {
-        \Log::info("START Finance ProcessAccountBalance");
-        \Log::info("startDate:".$this->startDate->toDateString());
-        \Log::info("accountId:".$this->accountId);
+        \Log::info('START Finance ProcessAccountBalance');
+        \Log::info('startDate:'.$this->startDate->toDateString());
+        \Log::info('accountId:'.$this->accountId);
 
         $accounts = $this->accountId
         ? collect([MoneyAccount::findOrFail($this->accountId)])
@@ -38,7 +42,7 @@ class ProcessAccountBalance implements ShouldQueue
         foreach ($accounts as $account) {
             $this->setBalance($account);
         }
-        \Log::info("END Finance ProcessAccountBalance");
+        \Log::info('END Finance ProcessAccountBalance');
     }
 
     private function setBalance(MoneyAccount $account)
