@@ -8,8 +8,6 @@ use App\Models\User;
 use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
 use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
 class UserSettingAccountController extends Controller
@@ -46,7 +44,7 @@ class UserSettingAccountController extends Controller
             UploadedFile::syncFiles($user->profileImages, $request->input('profile_image'));
 
             if ($request->hasFile('profile_image_upload')) {
-                UploadedFile::store($user, User::FileTypeProfileImage, $resizedFile, $targetSize = [120,120], $imageQualityCompress = 90);
+                UploadedFile::store($user, User::FileTypeProfileImage, $resizedFile, $targetSize = [120, 120], $imageQualityCompress = 90);
             }
 
             $user->refresh();

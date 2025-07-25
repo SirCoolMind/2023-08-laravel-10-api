@@ -8,7 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class DashboardAccountBalanceResource extends JsonResource
 {
     /**
-     * Simplified version to reduce data sent
+     * Simplified version to reduce data sent.
      *
      * @return array<string, mixed>
      */

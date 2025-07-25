@@ -24,7 +24,7 @@ return new class() extends Migration {
             $table->index('user_id');
 
             // Unique on each account, each day
-            $table->unique(['transaction_date','money_account_id']);
+            $table->unique(['transaction_date', 'money_account_id']);
         });
     }
 

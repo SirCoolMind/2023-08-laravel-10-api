@@ -47,12 +47,13 @@ class KpopEraController extends \App\Http\Controllers\Controller
         // Search filter
         $search = request()->input('q');
         if ($search) {
-            $query->where(function($subQuery) use($search) {
+            $query->where(function ($subQuery) use ($search) {
                 $subQuery->where('kpop_eras.name', 'like', "%$search%");
             });
         }
 
         $record = $query->paginate(request()->input('rows_per_page'));
+
         return KpopEraResource::collection($record);
     }
 

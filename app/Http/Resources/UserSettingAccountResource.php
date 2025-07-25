@@ -20,7 +20,7 @@ class UserSettingAccountResource extends JsonResource
 
         return [
             'id'             => $this->id,
-            'profile_image' => $imageData,
+            'profile_image'  => $imageData,
             'email'          => $this->email,
             'name'           => $this->name,
         ];

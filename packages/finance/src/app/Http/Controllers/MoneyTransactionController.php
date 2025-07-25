@@ -206,7 +206,7 @@ class MoneyTransactionController extends \App\Http\Controllers\Controller
         $transactionDate = $originalDate->lessThan($recordDate) ? $originalDate : $recordDate;
         $transactionDate = $transactionDate->toDateString();
         \DB::afterCommit(function () use ($listOfAccountId, $transactionDate) {
-            foreach($listOfAccountId as $accountId) {
+            foreach ($listOfAccountId as $accountId) {
                 \HafizRuslan\Finance\app\Jobs\ProcessAccountBalance::dispatch(
                     $accountId,
                     $transactionDate

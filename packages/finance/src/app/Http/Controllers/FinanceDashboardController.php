@@ -48,7 +48,7 @@ class FinanceDashboardController extends \App\Http\Controllers\Controller
         $totals = array_merge(['EXPENSE' => 0.00, 'INCOME' => 0.00], $totals);
 
         $totalExpense = number_format($totals['EXPENSE'] / 100, 2, '.', '');
-        $totalIncome = number_format($totals['INCOME'] /100, 2, '.', '');
+        $totalIncome = number_format($totals['INCOME'] / 100, 2, '.', '');
 
         return MoneyTransactionV2Resource::collection($records)
             ->additional([
@@ -60,7 +60,7 @@ class FinanceDashboardController extends \App\Http\Controllers\Controller
     }
 
     /**
-     * Return account balance with status
+     * Return account balance with status.
      *
      * Status:
      * 1 - okay
@@ -87,12 +87,12 @@ class FinanceDashboardController extends \App\Http\Controllers\Controller
 
         $countAccounts = count($moneyAccounts);
         $hasNoBalance = $records->isEmpty();
-        if($countAccounts == 0) {
+        if ($countAccounts == 0) {
             $accountStatus = 2;
-            $accountStatusDescription = __("No accounts created");
-        } elseif($hasNoBalance) {
+            $accountStatusDescription = __('No accounts created');
+        } elseif ($hasNoBalance) {
             $accountStatus = 3;
-            $accountStatusDescription = __("Balance not yet generated for today");
+            $accountStatusDescription = __('Balance not yet generated for today');
         } else {
             $accountStatus = 1;
             $accountStatusDescription = false;
@@ -100,7 +100,7 @@ class FinanceDashboardController extends \App\Http\Controllers\Controller
 
         return DashboardAccountBalanceResource::collection($records)
             ->additional([
-                'account_status' => $accountStatus,
+                'account_status'             => $accountStatus,
                 'account_status_description' => $accountStatusDescription,
             ]);
     }

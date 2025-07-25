@@ -11,7 +11,7 @@ class MoneyAccount extends Model
 
     public function clearUserCache(): void
     {
-        \Cache::forget("money_accounts_" . $this->user_id);
+        \Cache::forget('money_accounts_'.$this->user_id);
     }
 
     protected static function booted()

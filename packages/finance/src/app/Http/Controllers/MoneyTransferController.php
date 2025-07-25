@@ -79,7 +79,7 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
             ], 500);
         }
 
-        $record = new MoneyTransfer;
+        $record = new MoneyTransfer();
 
         try {
             \DB::beginTransaction();
@@ -162,11 +162,11 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
         }
 
         $record = MoneyTransfer::find($id);
-        if(!$record) {
+        if (!$record) {
             return response()->json(['message' => __('Record not found.')], 404);
         }
 
-        if($record->user_id != \Auth::id()) {
+        if ($record->user_id != \Auth::id()) {
             return response()->json(['message' => __('Unauthorized action.')], 403);
         }
 
@@ -180,7 +180,7 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
             ]));
             $transactionDate = \Carbon\Carbon::parse($record->transaction_date)->toDateString();
             \DB::afterCommit(function () use ($listOfAccountId, $transactionDate) {
-                foreach($listOfAccountId as $accountId) {
+                foreach ($listOfAccountId as $accountId) {
                     \HafizRuslan\Finance\app\Jobs\ProcessAccountBalance::dispatch(
                         $accountId,
                         $transactionDate
@@ -223,8 +223,9 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
     private function setTransactionItem(MoneyTransfer $record)
     {
         $sourceTransaction = $record->sourceTransaction;
-        if(!$sourceTransaction)
+        if (!$sourceTransaction) {
             $sourceTransaction = new MoneyTransaction();
+        }
 
         $transferCategory = $this->retrieveTransferCategory(FinanceTypeEnum::EXPENSE, $record->user_id);
         $sourceTransaction->money_category_id = $transferCategory->id;
@@ -238,8 +239,9 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
         $sourceTransaction->save();
 
         $targetTransaction = $record->targetTransaction;
-        if(!$targetTransaction)
+        if (!$targetTransaction) {
             $targetTransaction = new MoneyTransaction();
+        }
 
         $transferCategory = $this->retrieveTransferCategory(FinanceTypeEnum::INCOME, $record->user_id);
         $targetTransaction->money_category_id = $transferCategory->id;
@@ -261,7 +263,7 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
         ]));
         $transactionDate = \Carbon\Carbon::parse($record->transaction_date)->toDateString();
         \DB::afterCommit(function () use ($listOfAccountId, $transactionDate) {
-            foreach($listOfAccountId as $accountId) {
+            foreach ($listOfAccountId as $accountId) {
                 \HafizRuslan\Finance\app\Jobs\ProcessAccountBalance::dispatch(
                     $accountId,
                     $transactionDate
@@ -272,8 +274,8 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
 
     private function retrieveTransferCategory($typeExpenseIncome = null, $userId = null)
     {
-        if(!$typeExpenseIncome || !$userId) {
-            throw new \Exception("Missing parameter inside retrieveTransferCategory();");
+        if (!$typeExpenseIncome || !$userId) {
+            throw new \Exception('Missing parameter inside retrieveTransferCategory();');
         }
 
         $transferCategory = MoneyCategory::query()
@@ -282,8 +284,8 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
             ->where('type', $typeExpenseIncome)
             ->first();
 
-        if(!$transferCategory) {
-            $transferCategory = new MoneyCategory;
+        if (!$transferCategory) {
+            $transferCategory = new MoneyCategory();
             $transferCategory->type = $typeExpenseIncome;
             $transferCategory->name = 'Transfer';
             $transferCategory->description = 'Utilized for transfer module';
@@ -292,7 +294,6 @@ class MoneyTransferController extends \App\Http\Controllers\Controller
         }
 
         return $transferCategory;
-
     }
 
     private function withRelations($otherRelations = [])
