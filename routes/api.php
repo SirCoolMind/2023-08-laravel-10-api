@@ -21,6 +21,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/test', function (Request $request) {
+   $user =  DB::table('users')->first();
+dd($user);
+    dd("hjello");
+
+    return $request->user();
+});
+
+// require __DIR__.'/../vendor/laravel/passport/routes/api.php';
 
 //Public route
 Route::post('/login', [AuthController::class, 'login']);
