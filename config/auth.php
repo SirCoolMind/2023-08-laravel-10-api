@@ -117,4 +117,7 @@ return [
 
     'password_timeout' => 10800,
 
+    'passport_password_client_id' => env('PASSPORT_PASSWORD_CLIENT_ID'),
+    'passport_password_client_secret' => env('PASSPORT_PASSWORD_CLIENT_SECRET'),
+
 ];
