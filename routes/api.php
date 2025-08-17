@@ -23,7 +23,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 //Public route
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])
+    ->middleware('throttle:5,1'); // max 5 requests per minute per IP;
 // Route::post('/login-sanctum', [AuthController::class, 'loginSanctum']);
 // Route::post('/register', [AuthController::class, 'register']);
 
