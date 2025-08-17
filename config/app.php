@@ -162,6 +162,7 @@ return [
         \HafizRuslan\KpopCollection\KpopCollectionServiceProvider::class,
         \HafizRuslan\Finance\FinanceServiceProvider::class,
         \SirCoolMind\UploadedFiles\UploadedFilesServiceProvider::class,
+        App\Providers\BrevoMailServiceProvider::class,
 
         /*
          * Application Service Providers...
