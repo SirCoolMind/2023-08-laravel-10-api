@@ -5,11 +5,13 @@ namespace HafizRuslan\Finance\app\Models;
 use HafizRuslan\Finance\app\Enums\FinanceTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use SirCoolMind\UploadedFiles\app\Models\UploadedFile;
 
 class MoneyTransaction extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     const FileTypeTransactionImages = 'transaction_images';
 
