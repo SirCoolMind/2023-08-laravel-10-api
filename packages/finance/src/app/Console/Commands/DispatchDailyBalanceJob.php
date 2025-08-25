@@ -8,19 +8,25 @@ use Illuminate\Console\Command;
 
 class DispatchDailyBalanceJob extends Command
 {
-    protected $signature = 'finance-balance:daily';
+    protected $signature = 'finance-balance:daily {date? : The date for balance calculation (Y-m-d)}';
     protected $description = 'Dispatch daily account balance calculation for all accounts';
 
     public function handle()
     {
-        $today = \Carbon\Carbon::now()->toDateString();
+        $date = $this->argument('date') ?? \Carbon\Carbon::now()->toDateString();
 
-        $this->info("START Dispatch balance job for all accounts on {$today}.");
+        // Validate format (optional but recommended)
+        if (!\Carbon\Carbon::hasFormat($date, 'Y-m-d')) {
+            $this->error('Invalid date format. Please use Y-m-d (e.g., 2025-08-26).');
+            return Command::FAILURE;
+        }
 
-        MoneyAccount::cursor()->each(function ($account) use ($today) {
-            ProcessAccountBalance::dispatch($account->id, $today);
+        $this->info("START Dispatch balance job for all accounts on {$date}.");
+
+        MoneyAccount::cursor()->each(function ($account) use ($date) {
+            ProcessAccountBalance::dispatch($account->id, $date);
         });
 
-        $this->info("END Dispatched balance job for all accounts on {$today}.");
+        $this->info("END Dispatched balance job for all accounts on {$date}.");
     }
 }
