@@ -108,7 +108,7 @@ class MoneyTransactionExcelController extends \App\Http\Controllers\Controller
 
                 if ($account && $category) {
                     $transaction = new MoneyTransaction();
-                    $transaction->amount = $record->amount;
+                    $transaction->amount = intval(round($record->amount * 100));
                     $transaction->transaction_date = $record->transaction_date;
                     $transaction->description = $record->description;
                     $transaction->money_category_id = $category->id;
@@ -161,7 +161,7 @@ class MoneyTransactionExcelController extends \App\Http\Controllers\Controller
         $record = MoneyTransactionExcelBatch::where('batch_no', $batchNo)->findOrFail($id);
 
         $amountInput = $request->input('amount');
-        $record->amount = ($amountInput === '' || $amountInput === null) ? null : preg_replace('/[,.]/', '', $amountInput);
+        $record->amount = ($amountInput === '' || $amountInput === null) ? null : floatval(str_replace(',', '', $amountInput));
         $record->transaction_date = \Carbon\Carbon::parse($request->input('transaction_date'))->format('Y-m-d');
         $record->description = $request->input('description');
         $record->type = $request->input('type');
