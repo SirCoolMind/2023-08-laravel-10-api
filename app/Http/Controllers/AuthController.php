@@ -10,7 +10,9 @@ use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Exceptions\OAuthServerException;
+use League\OAuth2\Server\Exception\OAuthServerException as LeagueOAuthServerException;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -43,8 +45,21 @@ class AuthController extends Controller
             // Call Passport token controller directly
             $tokenResponse = $tokenController->issueToken($passportRequest);
 
+            if ($tokenResponse->getStatusCode() !== 200) {
+                return $this->error('Invalid credentials', 'The provided email or password is incorrect', 401);
+            }
+
             $tokenData = json_decode($tokenResponse->getContent(), true);
+
+            if (empty($tokenData['access_token'])) {
+                return $this->error('Invalid credentials', 'The provided email or password is incorrect', 401);
+            }
+
             $user = User::where('email', $request->input('email'))->first();
+
+            if (!$user) {
+                return $this->error('Invalid credentials', 'The provided email or password is incorrect', 401);
+            }
 
             // Return same structure as old Sanctum login
             return $this->success([
@@ -54,10 +69,11 @@ class AuthController extends Controller
                 'token'         => $tokenData['access_token'],
                 'refresh_token' => $tokenData['refresh_token'] ?? null,
             ]);
-        } catch (OAuthServerException $e) {
+        } catch (OAuthServerException | LeagueOAuthServerException $e) {
             return $this->error('Invalid credentials', 'The provided email or password is incorrect', 401);
-        } catch (\Exception $e) {
-            return $this->error('Server error', 'Unable to process login request', 500);
+        } catch (\Throwable $e) {
+            Log::error('Login error: ' . $e->getMessage(), ['exception' => $e]);
+            return $this->error('Server error', 'Unable to process login request: ' . $e->getMessage(), 500);
         }
     }
 
